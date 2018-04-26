@@ -40,5 +40,6 @@ endif()
 
 # Add dependency towards the library in the pkg-config file.
 pkg_config_append_libs(${PROJECT_NAME})
+pkg_config_append_libs(osqp)
 
 setup_project_finalize()
