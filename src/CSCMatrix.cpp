@@ -107,14 +107,14 @@ void CSCMatrix::updateAndAddIdentity(const MatrixCompressSparseConstRef & mat)
   }
 }
 
-MatrixXd CSCMatrix::toDenseEigen() const
+MatrixDense CSCMatrix::toDenseEigen() const
 {
-  MatrixXd ret = Eigen::MatrixXd::Zero(matrix_.m, matrix_.n);
+  MatrixDense ret = MatrixDense::Zero(matrix_.m, matrix_.n);
   for(size_t i = 0; i < p_.size() - 1; ++i)
   {
     auto pi = p_[i];
     auto pi_next = p_[i+1];
-    for(size_t j = pi; j < pi_next; ++j)
+    for(auto j = pi; j < pi_next; ++j)
     {
       ret(i_[j], i) = x_[j];
     }
@@ -126,7 +126,7 @@ MatrixSparse CSCMatrix::toSparseEigen() const
 {
   MatrixSparse ret(matrix_.n, matrix_.m);
   ret.reserve(matrix_.nzmax);
-  for (Index j = 0; j < p_.size() - 1; ++j)
+  for (Index j = 0; j < static_cast<Index>(p_.size()) - 1; ++j)
   {
     for (Index i = p_[j]; i < p_[j + 1]; ++i)
     {

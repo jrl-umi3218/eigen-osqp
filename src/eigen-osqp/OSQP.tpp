@@ -1,5 +1,7 @@
 #include <type_traits>
+#if __cplusplus >= cpp17
 #include <execution>
+#endif
 
 namespace Eigen
 {
@@ -10,7 +12,7 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
 {
   // Check data
   assert(Q.rows() == Q.cols());
-  assert(Q.rows() == C.rows());
+  assert(Q.rows() == c.rows());
   assert(A.rows() == AL.rows());
   assert(A.cols() == Q.rows());
   assert(AL.rows() == AU.rows());
@@ -21,24 +23,22 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
   A_.updateAndAddIdentity(A);
   data_.A = A_.matrix();
 
+  q_ = c;
+
 #if __cplusplus >= cpp17
-  // Copy q
-  std::copy(std::execution::par, c.data(), c.data() + c.size(), q_.begin());
   // Copy lower bound
-  std::copy(std::execution::par, AL.data(), AL.data() + AL.size(), bl_.begin());
-  std::copy(std::execution::par, XL.data(), XL.data() + XL.size(), bl_.begin() + AL.size());
+  std::copy_n(std::execution::par, AL.data(), AL.size(), bl_.data());
+  std::copy_n(std::execution::par, XL.data(), XL.size(), bl_.data() + AL.size());
   // Copy upper bound
-  std::copy(std::execution::par, AU.data(), AU.data() + AU.size(), bu_.begin());
-  std::copy(std::execution::par, XU.data(), XU.data() + XU.size(), bu_.begin() + AU.size());
+  std::copy_n(std::execution::par, AU.data(), AU.size(), bu_.data());
+  std::copy_n(std::execution::par, XU.data(), XU.size(), bu_.data() + AU.size());
 #else
-  // Copy q
-  std::copy(c.data(), c.data() + c.size(), q_.begin());
   // Copy lower bound
-  std::copy(AL.data(), AL.data() + AL.size(), bl_.begin());
-  std::copy(XL.data(), XL.data() + XL.size(), bl_.begin() + AL.size());
+  std::copy_n(AL.data(), AL.size(), bl_.data());
+  std::copy_n(XL.data(), XL.size(), bl_.data() + AL.size());
   // Copy upper bound
-  std::copy(AU.data(), AU.data() + AU.size(), bu_.begin());
-  std::copy(XU.data(), XU.data() + XU.size(), bu_.begin() + AU.size());
+  std::copy_n(AU.data(), AU.size(), bu_.data());
+  std::copy_n(XU.data(), XU.size(), bu_.data() + AU.size());
 #endif
 
   data_.q = q_.data();
@@ -55,11 +55,14 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
   // Solve
   bool ret = osqp_solve(workspace_.get()) >= 0;
 
+if (ret)
+{
 #if __cplusplus >= cpp17
-  std::copy(std::execution::par, workspace_->solution->x, workspace_->solution->x + result_.size(), result_.data());
+  std::copy_n(std::execution::par, workspace_->solution->x, result_.size(), result_.data());
 #else
-  std::copy(workspace_->solution->x, workspace_->solution->x + result_.size(), result_.data());
+  std::copy_n(workspace_->solution->x, result_.size(), result_.data());
 #endif
+}
 
   return ret;
 }

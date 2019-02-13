@@ -1,13 +1,14 @@
 #pragma once
 
+#include "exportdecl.h"
+
 #include <memory>
 
 #include <Eigen/Core>
 
-#include <eigen/osqp/config.hh>
 #include <eigen-osqp/CSCMatrix.h>
 
-struct OSQPWorkspaceDeleter
+struct EIGEN_OSQP_DLLAPI OSQPWorkspaceDeleter
 {
   void operator()(OSQPWorkspace * ptr) const;
 };
@@ -24,7 +25,7 @@ public:
 
   void problem(int nrVar, int nrConstr);
 
-  const VectorXd & result() const { return result_; }
+  const VectorDense & result() const { return result_; }
 
   template <typename TQ, typename TA>
   bool solve(const TQ & Q, const VectorConstRef & C, const TA & A, const VectorConstRef & AL, 
@@ -34,17 +35,17 @@ private:
   bool doInitWorkspace_;
   std::unique_ptr<OSQPWorkspace, OSQPWorkspaceDeleter> workspace_;
   /** Result */
-  Eigen::VectorXd result_;
+  VectorDense result_;
   /** P matrix */
   CSCMatrix P_;
   /** A matrix */
   CSCMatrix A_;
   /** q: linear part of cost */
-  Eigen::VectorXd q_;
+  VectorDense q_;
   /** Full lower bound (XL/AL) */
-  Eigen::VectorXd bl_;
+  VectorDense bl_;
   /** Full upper bound (XU/AU) */
-  Eigen::VectorXd bu_;
+  VectorDense bu_;
   /** Data of the solver */
   OSQPData data_;
   /** Settings */

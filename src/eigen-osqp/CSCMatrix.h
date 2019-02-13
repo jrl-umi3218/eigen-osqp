@@ -1,18 +1,19 @@
 #pragma once
 
+#include "exportdecl.h"
 #include "typedefs.h"
 
 #include <Eigen/Core>
 #include <Eigen/SparseCore>
 
-#include <osqp/osqp.h>
+#include <osqp.h>
 
 namespace Eigen
 {
 
 /** Helper class to convert Eigen::Matrix to csc struct
  * expected by OSQP */
-struct CSCMatrix
+struct EIGEN_OSQP_DLLAPI CSCMatrix
 {
   /** Default (empty) matrix */
   CSCMatrix();
@@ -32,7 +33,7 @@ struct CSCMatrix
   csc * matrix() { return &matrix_; }
 
   /** For debugging */
-  MatrixXd toDenseEigen() const;
+  MatrixDense toDenseEigen() const;
   MatrixSparse toSparseEigen() const;
 
 private:
