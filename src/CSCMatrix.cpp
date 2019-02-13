@@ -99,10 +99,12 @@ void CSCMatrix::updateAndAddIdentity(const MatrixCompressSparseConstRef & mat)
 
     // Copy rows
     iItr = std::copy_n(innerIndexIndexPtr, innerNNZs, iItr); // Copy rows
+    innerIndexIndexPtr += innerNNZs;
     *(iItr++) = mat.rows() + k; // Add the identity matrix row
 
     // values
-    xItr = std::copy_n(innerIndexIndexPtr, innerNNZs, xItr); // Copy values
+    xItr = std::copy_n(valueptr, innerNNZs, xItr); // Copy values
+    valueptr += innerNNZs;
     *(xItr++) = 1.; // Add the identity matrix value
   }
 }
@@ -124,16 +126,18 @@ MatrixDense CSCMatrix::toDenseEigen() const
 
 MatrixSparse CSCMatrix::toSparseEigen() const
 {
-  MatrixSparse ret(matrix_.n, matrix_.m);
+  MatrixSparse ret(matrix_.m, matrix_.n);
   ret.reserve(matrix_.nzmax);
   for (Index j = 0; j < static_cast<Index>(p_.size()) - 1; ++j)
   {
+    ret.startVec(j);
     for (Index i = p_[j]; i < p_[j + 1]; ++i)
     {
-      ret.insert(i_[i], j) = x_[i];
+      ret.insertBack(i_[i], j) = x_[i];
     }
   }
 
+  ret.finalize();
   return ret;
 }
 

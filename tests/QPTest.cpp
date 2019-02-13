@@ -19,3 +19,15 @@ BOOST_FIXTURE_TEST_CASE(OSQP_DENSE, QP1Dense)
   for (Eigen::Index i = 0; i < result.size(); ++i)
     BOOST_REQUIRE_SMALL(std::abs(result(i) - X(i)), 1e-6);
 }
+
+BOOST_FIXTURE_TEST_CASE(OSQP_SPARSE, QP1Sparse)
+{
+  Eigen::OSQP osqp{};
+
+  osqp.problem(nrvar, nreq + nrineq);
+  BOOST_REQUIRE(osqp.solve(Q, C, A, AL, AU, XL, XU));
+
+  Eigen::VectorXd result = osqp.result();
+  for (Eigen::Index i = 0; i < result.size(); ++i)
+    BOOST_REQUIRE_SMALL(std::abs(result(i) - X(i)), 1e-6);
+}

@@ -9,15 +9,18 @@
 
 BOOST_FIXTURE_TEST_CASE(DENSE_MATRIX, QP1Dense)
 {
-  Eigen::CSCMatrix cscA(A);
+  auto checkMatrix = [](const MatrixDense& matA, const MatrixDense& matConvA) {
+    BOOST_REQUIRE_EQUAL(matA.rows(), matConvA.rows());
+    BOOST_REQUIRE_EQUAL(matA.cols(), matConvA.cols());
+    for (Eigen::Index i = 0; i < matA.rows(); ++i)
+      for (Eigen::Index j = 0; j < matA.cols(); ++j)
+        BOOST_REQUIRE_SMALL(std::abs(matA(i,j) - matConvA(i,j)), 1e-10);
+  };
 
+  Eigen::CSCMatrix cscA(A);
   Eigen::MatrixXd convA = cscA.toDenseEigen();
 
-  BOOST_REQUIRE_EQUAL(A.rows(), convA.rows());
-  BOOST_REQUIRE_EQUAL(A.cols(), convA.cols());
-  for (Eigen::Index i = 0; i < A.rows(); ++i)
-    for (Eigen::Index j = 0; j < A.cols(); ++j)
-      BOOST_REQUIRE_SMALL(std::abs(A(i,j) - convA(i,j)), 1e-10);
+  checkMatrix(A, convA);
 
   // Add block identity matrix underneath
   cscA.updateAndAddIdentity(A);
@@ -27,9 +30,42 @@ BOOST_FIXTURE_TEST_CASE(DENSE_MATRIX, QP1Dense)
 
   convA = cscA.toDenseEigen();
 
-  BOOST_REQUIRE_EQUAL(AId.rows(), convA.rows());
-  BOOST_REQUIRE_EQUAL(AId.cols(), convA.cols());
-  for (Eigen::Index i = 0; i < AId.rows(); ++i)
-    for (Eigen::Index j = 0; j < AId.cols(); ++j)
-      BOOST_REQUIRE_SMALL(std::abs(AId(i,j) - convA(i,j)), 1e-10);
+  checkMatrix(AId, convA);
+}
+
+BOOST_FIXTURE_TEST_CASE(SPARSE_MATRIX, QP1Sparse)
+{
+  auto checkMatrix = [](const MatrixSparse& matA, const MatrixSparse& matConvA) {
+    BOOST_REQUIRE(matConvA.isCompressed());
+    BOOST_REQUIRE_EQUAL(matA.rows(), matConvA.rows());
+    BOOST_REQUIRE_EQUAL(matA.cols(), matConvA.cols());
+    BOOST_REQUIRE_EQUAL(matA.outerSize(), matConvA.outerSize());
+    for(int k = 0; k < matA.outerSize(); ++k)
+    {
+      for(MatrixSparse::InnerIterator itA(matA, k), itCA(matConvA, k); itA; ++itA, ++itCA)
+      {
+        BOOST_REQUIRE_EQUAL(itA.row(), itCA.row());
+        BOOST_REQUIRE_EQUAL(itA.col(), itCA.col());
+        BOOST_REQUIRE_SMALL(std::abs(itA.value() - itCA.value()), 1e-10);
+      }
+    }
+  };
+
+  Eigen::CSCMatrix cscA(A);
+  MatrixSparse convA = cscA.toSparseEigen();
+
+  checkMatrix(A, convA);
+
+  // Add block identity matrix underneath
+  cscA.updateAndAddIdentity(A);
+
+  Eigen::MatrixXd tmp(A.rows() + nrvar, A.cols());
+  tmp.block(0, 0, A.rows(), A.cols()) = A;
+  tmp.block(A.rows(), 0, nrvar, nrvar).setIdentity();
+  MatrixSparse AId = tmp.sparseView();
+  AId.makeCompressed();
+
+  convA = cscA.toSparseEigen();
+
+  checkMatrix(AId, convA);
 }
