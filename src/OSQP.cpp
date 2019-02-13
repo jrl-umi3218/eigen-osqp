@@ -31,7 +31,7 @@ void OSQP::problem(int nrVar, int nrConstr)
   }
 
   data_.n = nrVar;
-  data_.m = nrConstr;
+  data_.m = nrVar + nrConstr;
   q_.resize(data_.n);
   bl_.resize(data_.m);
   bu_.resize(data_.m);
