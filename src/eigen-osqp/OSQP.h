@@ -22,16 +22,16 @@ public:
 
   ~OSQP();
 
+  void problem(int nrVar, int nrConstr);
+
   const VectorXd & result() const { return result_; }
 
-  bool solve(const MatrixConstRef & Q,
-             const VectorConstRef & C,
-             const MatrixConstRef & A,
-             const VectorConstRef & AL,
-             const VectorConstRef & AU,
-             const VectorConstRef & XL,
-             const VectorConstRef & XU);
+  template <typename TQ, typename TA>
+  bool solve(const TQ & Q, const VectorConstRef & C, const TA & A, const VectorConstRef & AL, 
+             const VectorConstRef & AU, const VectorConstRef & XL, const VectorConstRef & XU);
+
 private:
+  bool doInitWorkspace_;
   std::unique_ptr<OSQPWorkspace, OSQPWorkspaceDeleter> workspace_;
   /** Result */
   Eigen::VectorXd result_;
@@ -52,3 +52,5 @@ private:
 };
 
 } // namespace Eigen
+
+#include "OSQP.tpp"

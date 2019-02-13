@@ -1,4 +1,5 @@
 #include "eigen-osqp/CSCMatrix.h"
+#include <numeric>
 
 namespace Eigen
 {
@@ -8,68 +9,105 @@ CSCMatrix::CSCMatrix()
   memset(&matrix_, 0, sizeof(csc));
 }
 
-CSCMatrix::CSCMatrix(const MatrixConstRef & mat)
+CSCMatrix::CSCMatrix(const MatrixConstRef & mat, bool doAddIdentity)
 : CSCMatrix()
 {
-  update(mat);
+  doAddIdentity ? updateAndAddIdentity(mat) : update(mat);
 }
 
-CSCMatrix::CSCMatrix(long long identity, const MatrixConstRef & mat)
+CSCMatrix::CSCMatrix(const MatrixCompressSparseConstRef & mat, bool doAddIdentity)
 : CSCMatrix()
 {
-  update(identity, mat);
+  doAddIdentity ? updateAndAddIdentity(mat) : update(mat);
 }
 
 void CSCMatrix::update(const MatrixConstRef & mat)
 {
-  update(mat, 0);
-}
+  initParameters(mat);
 
-void CSCMatrix::update(long long identity, const MatrixConstRef & mat)
-{
-  update(mat, identity);
-}
+  Index nrRows = mat.rows();
+  const auto* data = mat.data();
+  auto iItr = i_.begin();
 
-void CSCMatrix::update(const MatrixConstRef & mat, long long identity)
-{
-  if(matrix_.nzmax != mat.size() + identity)
+  // Generate column index
+  std::generate(p_.begin(), p_.end(), [nrRows, n = 0]() mutable { return nrRows * (n++); });
+
+  // Generate row index
+  std::vector<int> rowIndex(nrRows);
+  std::iota(rowIndex.begin(), rowIndex.end(), 0);
+  for (Index j = 0; j < mat.cols(); ++j)
   {
-    matrix_.nzmax = mat.size() + identity;
-    matrix_.m = identity + mat.rows();
-    matrix_.n = mat.cols();
-    p_.resize(mat.cols() + 1);
-    matrix_.p = p_.data();
-    i_.resize(identity + mat.size());
-    p_.back() = i_.size();
-    matrix_.i = i_.data();
-    x_.resize(identity + mat.size());
-    matrix_.x = x_.data();
-    matrix_.nz = -1;
+    std::copy(rowIndex.cbegin(), rowIndex.cend(), iItr);
+    iItr += nrRows;
   }
-  size_t i = 0;
-  for(long long col_i = 0; col_i < mat.cols(); col_i++)
+
+  // Copy matrix value
+  std::copy(data, data + mat.size(), x_.begin());
+}
+
+void CSCMatrix::updateAndAddIdentity(const MatrixConstRef & mat)
+{
+  initParameters(mat, true);
+
+  Index i = 0;
+  for(Index col_i = 0; col_i < mat.cols(); col_i++)
   {
-    if(identity > col_i)
+    for(Index row_i = 0; row_i < mat.rows(); row_i++)
     {
-      p_[col_i] = col_i * (mat.rows() + 1);
-      i_[i] = col_i;
-      x_[i] = 1.0;
-      i++;
-    }
-    else
-    {
-      p_[col_i] = col_i * mat.rows();
-    }
-    for(long long row_i = 0; row_i < mat.rows(); row_i++)
-    {
-      i_[i] = row_i + identity;
+      i_[i] = row_i;
       x_[i] = mat(row_i, col_i);
       i++;
     }
+    p_[col_i] = col_i * (mat.rows() + 1);
+    i_[i] = mat.rows() + col_i;
+    x_[i] = 1.0;
+    i++;
   }
 }
 
-Eigen::MatrixXd CSCMatrix::toEigen() const
+void CSCMatrix::update(const MatrixCompressSparseConstRef & mat)
+{
+  initParameters(mat);
+
+#if __cplusplus >= cpp17
+  std::copy(std::execution::par, mat.outerIndexPtr(), mat.outerIndexPtr() + mat.outerSize(), p_.begin()); // Copy column start index of non-zeros
+  std::copy(std::execution::par, mat.innerIndexPtr(), mat.innerIndexPtr() + mat.nonZeros(), i_.begin()); // Copy row index of non-zeros
+  std::copy(std::execution::par, mat.valuePtr(), mat.valuePtr() + mat.nonZeros(), x_.begin()); // Copy matrix data
+#else
+  std::copy(mat.outerIndexPtr(), mat.outerIndexPtr() + mat.outerSize(), p_.begin()); // Copy column start index of non-zeros
+  std::copy(mat.innerIndexPtr(), mat.innerIndexPtr() + mat.nonZeros(), i_.begin()); // Copy row index of non-zeros
+  std::copy(mat.valuePtr(), mat.valuePtr() + mat.nonZeros(), x_.begin()); // Copy matrix data
+#endif
+}
+
+void CSCMatrix::updateAndAddIdentity(const MatrixCompressSparseConstRef & mat)
+{
+  initParameters(mat, true);
+
+  const auto* innerIndexIndexPtr = mat.innerIndexPtr();
+  const auto* outerIndexIndexPtr = mat.outerIndexPtr();
+  const auto* valueptr = mat.valuePtr();
+  auto iItr = i_.begin();
+  auto xItr = x_.begin();
+  auto pItr = p_.begin();
+  for (int k = 0; k < mat.outerSize(); ++k)
+  {
+    // Copy columns
+    *(pItr++) = *(outerIndexIndexPtr++) + k; // A value from the identity matrix is added for each column
+
+    int innerNNZs = *outerIndexIndexPtr - *(outerIndexIndexPtr - 1); // Get number of non-zeros
+
+    // Copy rows
+    iItr = std::copy_n(innerIndexIndexPtr, innerNNZs, iItr); // Copy rows
+    *(iItr++) = mat.rows() + k; // Add the identity matrix row
+
+    // values
+    xItr = std::copy_n(innerIndexIndexPtr, innerNNZs, xItr); // Copy values
+    *(xItr++) = 1.; // Add the identity matrix value
+  }
+}
+
+MatrixXd CSCMatrix::toDenseEigen() const
 {
   MatrixXd ret = Eigen::MatrixXd::Zero(matrix_.m, matrix_.n);
   for(size_t i = 0; i < p_.size() - 1; ++i)
@@ -82,6 +120,67 @@ Eigen::MatrixXd CSCMatrix::toEigen() const
     }
   }
   return ret;
+}
+
+MatrixSparse CSCMatrix::toSparseEigen() const
+{
+  MatrixSparse ret(matrix_.n, matrix_.m);
+  ret.reserve(matrix_.nzmax);
+  for (Index j = 0; j < p_.size() - 1; ++j)
+  {
+    for (Index i = p_[j]; i < p_[j + 1]; ++i)
+    {
+      ret.insert(i_[i], j) = x_[i];
+    }
+  }
+
+  return ret;
+}
+
+void CSCMatrix::initParameters(const MatrixConstRef & mat, bool doAddIdentity)
+{
+  Index nrVar = 0;
+  if (doAddIdentity)
+  {
+    nrVar = mat.cols();
+  }
+  if(matrix_.nzmax != nrVar + mat.size())
+  {
+    matrix_.nzmax = nrVar + mat.size();
+    matrix_.m = nrVar + mat.rows();
+    matrix_.n = mat.cols();
+    p_.resize(mat.cols() + 1);
+    matrix_.p = p_.data();
+    i_.resize(nrVar + mat.size());
+    p_.back() = i_.size();
+    matrix_.i = i_.data();
+    x_.resize(nrVar + mat.size());
+    matrix_.x = x_.data();
+    matrix_.nz = -1;
+  }
+}
+
+void CSCMatrix::initParameters(const MatrixCompressSparseConstRef & mat, bool doAddIdentity)
+{
+  Index nrVar = 0;
+  if (doAddIdentity)
+  {
+    nrVar = mat.cols();
+  }
+  if(matrix_.nzmax != nrVar + mat.nonZeros())
+  {
+    matrix_.nzmax = nrVar + mat.nonZeros();
+    matrix_.m = nrVar + mat.rows();
+    matrix_.n = mat.cols();
+    p_.resize(mat.cols() + 1);
+    matrix_.p = p_.data();
+    i_.resize(nrVar + mat.nonZeros());
+    p_.back() = i_.size();
+    matrix_.i = i_.data();
+    x_.resize(nrVar + mat.nonZeros());
+    matrix_.x = x_.data();
+    matrix_.nz = -1;
+  }
 }
 
 }

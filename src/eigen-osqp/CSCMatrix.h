@@ -1,11 +1,11 @@
 #pragma once
 
+#include "typedefs.h"
+
 #include <Eigen/Core>
+#include <Eigen/SparseCore>
 
 #include <osqp/osqp.h>
-
-using MatrixConstRef = Eigen::Ref<const Eigen::MatrixXd>;
-using VectorConstRef = Eigen::Ref<const Eigen::VectorXd>;
 
 namespace Eigen
 {
@@ -18,25 +18,32 @@ struct CSCMatrix
   CSCMatrix();
 
   /** Dense matrix to CSC conversion */
-  CSCMatrix(const MatrixConstRef & mat);
+  CSCMatrix(const MatrixConstRef & mat, bool doAddIdentity = false);
 
-  /** Block identity + dense matrix to CSC conversion */
-  CSCMatrix(long long identity, const MatrixConstRef & mat);
+  /** Sparse matrix to CSC conversion */
+  CSCMatrix(const MatrixCompressSparseConstRef & mat, bool doAddIdentity = false);
 
   void update(const MatrixConstRef & mat);
+  void updateAndAddIdentity(const MatrixConstRef & mat);
 
-  void update(long long identity, const MatrixConstRef & mat);
+  void update(const MatrixCompressSparseConstRef & mat);
+  void updateAndAddIdentity(const MatrixCompressSparseConstRef & mat);
 
   csc * matrix() { return &matrix_; }
 
   /** For debugging */
-  Eigen::MatrixXd toEigen() const;
+  MatrixXd toDenseEigen() const;
+  MatrixSparse toSparseEigen() const;
+
+private:
+  void initParameters(const MatrixConstRef & mat, bool doAddIdentity = false);
+  void initParameters(const MatrixCompressSparseConstRef & mat, bool doAddIdentity = false);
+
 private:
   csc matrix_;
   std::vector<c_int> p_;
   std::vector<c_int> i_;
   std::vector<c_float> x_;
-  void update(const MatrixConstRef & mat, long long start);
 };
 
 } // namespace Eigen

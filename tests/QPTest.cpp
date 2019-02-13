@@ -62,6 +62,7 @@ BOOST_AUTO_TEST_CASE(OSQP)
 
   Eigen::OSQP osqp{};
 
+  osqp.problem(qp1.nrvar, qp1.nreq + qp1.nrineq);
   osqp.solve(qp1.Q, qp1.C,
     qp1.A, qp1.AL, qp1.AU,
     qp1.XL, qp1.XU);
