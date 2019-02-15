@@ -5,7 +5,7 @@
 #include <glob_opts.h> // For c_float
 
 // Define c++17 value of __cplusplus macro (for readability)
-#define cpp17 201703L
+#define CPP17 201703L
 
 // Must be Column-major !! (For now)
 using MatrixDense = Eigen::Matrix<c_float, Eigen::Dynamic, Eigen::Dynamic>;

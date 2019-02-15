@@ -41,11 +41,11 @@ private:
   /** A matrix */
   CSCMatrix A_;
   /** q: linear part of cost */
-  VectorDense q_;
+  std::vector<c_float> q_;
   /** Full lower bound (XL/AL) */
-  VectorDense bl_;
+  std::vector<c_float> bl_;
   /** Full upper bound (XU/AU) */
-  VectorDense bu_;
+  std::vector<c_float> bu_;
   /** Data of the solver */
   OSQPData data_;
   /** Settings */
