@@ -10,7 +10,7 @@ set(PROJECT_DESCRIPTION "OSQP QP solver through Eigen3 library.")
 set(PROJECT_URL "https://gite.lirmm.fr/multi-contact/eigen-osqp")
 
 # Disable -Werror on Unix for now.
-set(CXX_DISABLE_WERROR True)
+# set(CXX_DISABLE_WERROR True)
 set(DOXYGEN_USE_MATHJAX "YES")
 
 option(USE_LTO "Enable link-time optimizations" ON)
@@ -33,6 +33,13 @@ search_for_eigen()
 
 # add OSQP library
 find_package(osqp REQUIRED)
+
+# For MSVC, set local environment variable to enable finding the built dll
+# of the main library when launching ctest with RUN_TESTS
+IF(MSVC)
+  SET(CMAKE_MSVCIDE_RUN_PATH "\$(SolutionDir)/src/\$(Configuration)")
+  add_compile_options("/WX")
+ENDIF(MSVC)
 
 include_directories(src/)
 

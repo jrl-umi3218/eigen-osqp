@@ -42,9 +42,9 @@ public:
   void admmStepSigma(c_float sigma) noexcept { settings_.sigma = sigma; }
   c_float admmStepSigma() const noexcept { return settings_.sigma; }
 
-  /*! \brief heuristic data scaling iterations. If 0, scaling disabled. Default is 10. */
-  void scalingIter(c_float scaling) noexcept { settings_.scaling = scaling; }
-  c_float scalingIter() const noexcept { return settings_.scaling; }
+  /*! \brief Heuristic data scaling iterations. If 0, scaling disabled. Default is 10. */
+  void scalingIter(c_int scaling) noexcept { settings_.scaling = scaling; }
+  c_int scalingIter() const noexcept { return settings_.scaling; }
 
   /*! \brief Maximum number of iteration. Default is 4000. */
   void maxIter(c_int maxIter) noexcept { settings_.max_iter = maxIter; }
