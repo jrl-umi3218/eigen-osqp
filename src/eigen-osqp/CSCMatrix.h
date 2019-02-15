@@ -46,8 +46,7 @@ struct EIGEN_OSQP_DLLAPI CSCMatrix
   MatrixSparse toSparseEigen() const;
 
 private:
-  void initParameters(const MatrixConstRef & mat, bool doAddIdentity = false);
-  void initParameters(const MatrixCompressSparseConstRef & mat, bool doAddIdentity = false);
+  void initParameters(Index rows, Index cols, Index newSize, bool doAddIdentity);
   void updateDefault(const MatrixConstRef & mat);
   void updateAndAddIdentity(const MatrixConstRef & mat);
   void updateDefault(const MatrixCompressSparseConstRef & mat);

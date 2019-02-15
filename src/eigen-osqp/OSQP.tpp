@@ -17,7 +17,7 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
 
   P_.update(Q);
   data_.P = P_.matrix();
-  A_.updateAndAddIdentity(A);
+  A_.update(A, true);
   data_.A = A_.matrix();
 
   auto blItr = bl_.begin();

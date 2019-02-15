@@ -23,30 +23,28 @@ CSCMatrix::CSCMatrix(const MatrixCompressSparseConstRef & mat, bool doAddIdentit
 
 void CSCMatrix::update(const MatrixConstRef & mat, bool doAddIdentity)
 {
-  initParameters(mat);
-  if (doAddIdentity)
-  {
-    updateDefault(mat);
-  }
-  else
+  initParameters(mat.rows(), mat.cols(), mat.size(), doAddIdentity);
+  if(doAddIdentity)
   {
     updateAndAddIdentity(mat);
   }
-  
+  else
+  {
+    updateDefault(mat);
+  }
 }
 
 void CSCMatrix::update(const MatrixCompressSparseConstRef & mat, bool doAddIdentity)
 {
-  initParameters(mat);
-  if (doAddIdentity)
-  {
-    updateDefault(mat);
-  }
-  else
+  initParameters(mat.rows(), mat.cols(), mat.nonZeros(), doAddIdentity);
+  if(doAddIdentity)
   {
     updateAndAddIdentity(mat);
   }
-  
+  else
+  {
+    updateDefault(mat);
+  }
 }
 
 MatrixDense CSCMatrix::toDenseEigen() const
@@ -81,47 +79,26 @@ MatrixSparse CSCMatrix::toSparseEigen() const
   return ret;
 }
 
-void CSCMatrix::initParameters(const MatrixConstRef & mat, bool doAddIdentity)
-{
-  Index nrVar = 0;
-  if (doAddIdentity)
-  {
-    nrVar = mat.cols();
-  }
-  if(matrix_.nzmax != nrVar + mat.size())
-  {
-    matrix_.nzmax = nrVar + mat.size();
-    matrix_.m = nrVar + mat.rows();
-    matrix_.n = mat.cols();
-    p_.resize(mat.cols() + 1);
-    matrix_.p = p_.data();
-    i_.resize(nrVar + mat.size());
-    p_.back() = i_.size();
-    matrix_.i = i_.data();
-    x_.resize(nrVar + mat.size());
-    matrix_.x = x_.data();
-    matrix_.nz = -1;
-  }
-}
+/*
+ * Private methods
+ */
 
-void CSCMatrix::initParameters(const MatrixCompressSparseConstRef & mat, bool doAddIdentity)
+void CSCMatrix::initParameters(Index rows, Index cols, Index newSize, bool doAddIdentity)
 {
   Index nrVar = 0;
-  if (doAddIdentity)
+  if(doAddIdentity)
+    nrVar = cols;
+  if(matrix_.nzmax != nrVar + newSize)
   {
-    nrVar = mat.cols();
-  }
-  if(matrix_.nzmax != nrVar + mat.nonZeros())
-  {
-    matrix_.nzmax = nrVar + mat.nonZeros();
-    matrix_.m = nrVar + mat.rows();
-    matrix_.n = mat.cols();
-    p_.resize(mat.cols() + 1);
+    matrix_.nzmax = nrVar + newSize;
+    matrix_.m = nrVar + rows;
+    matrix_.n = cols;
+    p_.resize(cols + 1);
     matrix_.p = p_.data();
-    i_.resize(nrVar + mat.nonZeros());
+    i_.resize(nrVar + newSize);
     p_.back() = i_.size();
     matrix_.i = i_.data();
-    x_.resize(nrVar + mat.nonZeros());
+    x_.resize(nrVar + newSize);
     matrix_.x = x_.data();
     matrix_.nz = -1;
   }
@@ -129,7 +106,6 @@ void CSCMatrix::initParameters(const MatrixCompressSparseConstRef & mat, bool do
 
 void CSCMatrix::updateDefault(const MatrixConstRef & mat)
 {
-
   Index nrRows = mat.rows();
   const auto* data = mat.data();
   auto iItr = i_.begin();
@@ -151,8 +127,6 @@ void CSCMatrix::updateDefault(const MatrixConstRef & mat)
 
 void CSCMatrix::updateAndAddIdentity(const MatrixConstRef & mat)
 {
-  initParameters(mat, true);
-
   Index i = 0;
   for(Index col_i = 0; col_i < mat.cols(); col_i++)
   {
@@ -171,7 +145,6 @@ void CSCMatrix::updateAndAddIdentity(const MatrixConstRef & mat)
 
 void CSCMatrix::updateDefault(const MatrixCompressSparseConstRef & mat)
 {
-  initParameters(mat);
   std::copy_n(mat.outerIndexPtr(), mat.outerSize(), p_.begin()); // Copy column start index of non-zeros
   std::copy_n(mat.innerIndexPtr(), mat.nonZeros(), i_.begin()); // Copy row index of non-zeros
   std::copy_n(mat.valuePtr(), mat.nonZeros(), x_.begin()); // Copy matrix data
@@ -179,8 +152,6 @@ void CSCMatrix::updateDefault(const MatrixCompressSparseConstRef & mat)
 
 void CSCMatrix::updateAndAddIdentity(const MatrixCompressSparseConstRef & mat)
 {
-  initParameters(mat, true);
-
   const auto* innerIndexIndexPtr = mat.innerIndexPtr();
   const auto* outerIndexIndexPtr = mat.outerIndexPtr();
   const auto* valueptr = mat.valuePtr();

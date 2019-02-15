@@ -23,7 +23,7 @@ BOOST_FIXTURE_TEST_CASE(DENSE_MATRIX, QP1Dense)
   checkMatrix(A, convA);
 
   // Add block identity matrix underneath
-  cscA.updateAndAddIdentity(A);
+  cscA.update(A, true);
   Eigen::MatrixXd AId(A.rows() + nrvar, A.cols());
   AId.block(0, 0, A.rows(), A.cols()) = A;
   AId.block(A.rows(), 0, nrvar, nrvar).setIdentity();
@@ -57,7 +57,7 @@ BOOST_FIXTURE_TEST_CASE(SPARSE_MATRIX, QP1Sparse)
   checkMatrix(A, convA);
 
   // Add block identity matrix underneath
-  cscA.updateAndAddIdentity(A);
+  cscA.update(A, true);
 
   Eigen::MatrixXd tmp(A.rows() + nrvar, A.cols());
   tmp.block(0, 0, A.rows(), A.cols()) = A;
