@@ -4,7 +4,8 @@
 #include <Eigen/SparseCore>
 #include <glob_opts.h> // For c_float
 
-// Must be Column-major !! (For now)
+// Matrices must be Column-major (default) !!
+// The library won't work for Row-major matrices.
 using MatrixDense = Eigen::Matrix<c_float, Eigen::Dynamic, Eigen::Dynamic>;
 using VectorDense = Eigen::Matrix<c_float, Eigen::Dynamic, 1>;
 using MatrixConstRef = Eigen::Ref<const MatrixDense>;

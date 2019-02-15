@@ -19,10 +19,6 @@ OSQP::OSQP()
   memset(&data_, 0, sizeof(OSQPData));
 }
 
-OSQP::~OSQP()
-{
-}
-
 void OSQP::problem(int nrVar, int nrConstr)
 {
   if(data_.n != nrVar || data_.m != nrConstr)
