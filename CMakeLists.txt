@@ -19,6 +19,7 @@ if(NOT CXX_HAS_LTO)
   set(USE_LTO OFF)
 endif()
 option(DISABLE_TESTS "Disable unit tests." OFF)
+option(COMPILE_EXAMPLES "Compile examples." ON)
 
 setup_project()
 
@@ -39,6 +40,10 @@ add_subdirectory(src)
 
 if(NOT ${DISABLE_TESTS})
   add_subdirectory(tests)
+endif()
+
+if(${COMPILE_EXAMPLES})
+  add_subdirectory(examples)
 endif()
 
 # Add dependency towards the library in the pkg-config file.
