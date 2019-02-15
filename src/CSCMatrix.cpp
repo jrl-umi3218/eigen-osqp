@@ -41,7 +41,7 @@ void CSCMatrix::update(const MatrixConstRef & mat)
   }
 
   // Copy matrix value
-  std::copy(data, data + mat.size(), x_.begin());
+  std::copy_n(data, mat.size(), x_.begin());
 }
 
 void CSCMatrix::updateAndAddIdentity(const MatrixConstRef & mat)
@@ -67,16 +67,9 @@ void CSCMatrix::updateAndAddIdentity(const MatrixConstRef & mat)
 void CSCMatrix::update(const MatrixCompressSparseConstRef & mat)
 {
   initParameters(mat);
-
-#if __cplusplus >= CPP17
-  std::copy(std::execution::par_unseq, mat.outerIndexPtr(), mat.outerIndexPtr() + mat.outerSize(), p_.begin()); // Copy column start index of non-zeros
-  std::copy(std::execution::par_unseq, mat.innerIndexPtr(), mat.innerIndexPtr() + mat.nonZeros(), i_.begin()); // Copy row index of non-zeros
-  std::copy(std::execution::par_unseq, mat.valuePtr(), mat.valuePtr() + mat.nonZeros(), x_.begin()); // Copy matrix data
-#else
-  std::copy(mat.outerIndexPtr(), mat.outerIndexPtr() + mat.outerSize(), p_.begin()); // Copy column start index of non-zeros
-  std::copy(mat.innerIndexPtr(), mat.innerIndexPtr() + mat.nonZeros(), i_.begin()); // Copy row index of non-zeros
-  std::copy(mat.valuePtr(), mat.valuePtr() + mat.nonZeros(), x_.begin()); // Copy matrix data
-#endif
+  std::copy_n(mat.outerIndexPtr(), mat.outerSize(), p_.begin()); // Copy column start index of non-zeros
+  std::copy_n(mat.innerIndexPtr(), mat.nonZeros(), i_.begin()); // Copy row index of non-zeros
+  std::copy_n(mat.valuePtr(), mat.nonZeros(), x_.begin()); // Copy matrix data
 }
 
 void CSCMatrix::updateAndAddIdentity(const MatrixCompressSparseConstRef & mat)
