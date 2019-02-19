@@ -106,40 +106,42 @@ void CSCMatrix::initParameters(Index rows, Index cols, Index newSize, bool doAdd
 
 void CSCMatrix::updateDefault(const MatrixConstRef & mat)
 {
-  Index nrRows = mat.rows();
+  Index i = 0;
   const auto* data = mat.data();
-  auto iItr = i_.begin();
-
-  // Generate column index
-  std::generate(p_.begin(), p_.end(), [nrRows, n = 0]() mutable { return nrRows * (n++); });
-
-  // Generate row index
-  std::vector<int> rowIndex(nrRows);
-  std::iota(rowIndex.begin(), rowIndex.end(), 0);
-  for (Index j = 0; j < mat.cols(); ++j)
+  Eigen::Index cols = mat.cols();
+  Eigen::Index rows = mat.rows();
+  for(Index col = 0; col < cols; ++col) // Faster than using std::copy
   {
-    iItr = std::copy(rowIndex.cbegin(), rowIndex.cend(), iItr);
+    p_[col] = i;
+    for(Index row = 0; row < rows; ++row)
+    {
+      i_[i] = row;
+      x_[i] = *(data++);
+      ++i;
+    }
   }
-
-  // Copy matrix value
-  std::copy_n(data, mat.size(), x_.begin());
 }
 
 void CSCMatrix::updateAndAddIdentity(const MatrixConstRef & mat)
 {
   Index i = 0;
-  for(Index col_i = 0; col_i < mat.cols(); col_i++)
+  const auto* data = mat.data();
+  Eigen::Index cols = mat.cols();
+  Eigen::Index rows = mat.rows();
+  for(Index col = 0; col < cols; ++col) // Faster than using std::copy
   {
-    for(Index row_i = 0; row_i < mat.rows(); row_i++)
+    p_[col] = i;
+
+    for(Index row = 0; row < rows; ++row)
     {
-      i_[i] = row_i;
-      x_[i] = mat(row_i, col_i);
-      i++;
+      i_[i] = row;
+      x_[i] = *(data++);
+      ++i;
     }
-    p_[col_i] = col_i * (mat.rows() + 1);
-    i_[i] = mat.rows() + col_i;
+
+    i_[i] = rows + col;
     x_[i] = 1.0;
-    i++;
+    ++i;
   }
 }
 
@@ -158,12 +160,13 @@ void CSCMatrix::updateAndAddIdentity(const MatrixCompressSparseConstRef & mat)
   auto iItr = i_.begin();
   auto xItr = x_.begin();
   auto pItr = p_.begin();
+  int innerNNZs;
   for (int k = 0; k < mat.outerSize(); ++k)
   {
     // Copy columns
     *(pItr++) = *(outerIndexIndexPtr++) + k; // A value from the identity matrix is added for each column
 
-    int innerNNZs = *outerIndexIndexPtr - *(outerIndexIndexPtr - 1); // Get number of non-zeros
+    innerNNZs = *outerIndexIndexPtr - *(outerIndexIndexPtr - 1); // Get number of non-zeros
 
     // Copy rows
     iItr = std::copy_n(innerIndexIndexPtr, innerNNZs, iItr); // Copy rows
