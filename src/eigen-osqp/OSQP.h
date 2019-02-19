@@ -31,7 +31,7 @@ public:
   /*! \brief Default constructor. */
   OSQP();
   /*! \brief Default destructor. */
-  ~OSQP() = default;
+  ~OSQP() noexcept = default;
 
   // Access to settings.
   /*! \brief ADMM step rho. Default is 0.1. */
@@ -75,8 +75,8 @@ public:
   linsys_solver_type linearSystemSolver() const noexcept { return settings_.linsys_solver; }
 
   /*! \brief Use scale termination criteria. Default is false. */
-  void doScaleTermination(bool doIt) noexcept { settings_.scaled_termination = (doIt ? 1 : 0); }
-  bool doScaleTermination() const noexcept { return static_cast<bool>(settings_.scaled_termination); }
+  void scaleTermination(bool doScaleTermination) noexcept { settings_.scaled_termination = (doScaleTermination ? 1 : 0); }
+  bool scaleTermination() const noexcept { return static_cast<bool>(settings_.scaled_termination); }
 
   /*! \brief check termination interval. If 0, termination checking is disabled. Default is 25. */
   void checkTermination(c_int checkValue) noexcept { settings_.check_termination = checkValue; }
@@ -85,6 +85,22 @@ public:
   /*! \brief Warm start. Default is true. */
   void warmStart(bool ws) noexcept { settings_.warm_start = (ws ? 1 : 0); }
   bool warmStart() const noexcept { return static_cast<bool>(settings_.warm_start); }
+
+  /*! \brief Polish ADMM solution. */
+  void polish(bool doPolish) noexcept { settings_.polish = (doPolish ? 1 : 0); }
+  bool polish() const noexcept { return static_cast<bool>(settings_.polish); }
+
+  /*! \brief Regularization parameter for polish. */
+  void polishDelta(c_float delta) noexcept { settings_.delta = delta; }
+  c_float polishDelta() const noexcept { return settings_.delta; }
+
+  /*! \brief Iterative refinement steps in polish. */
+  void polishRefineIter(c_int iter) noexcept { settings_.polish_refine_iter = iter; }
+  c_int polishRefineIter() const noexcept { return settings_.polish_refine_iter; }
+
+  /*! \brief Write osqp progress. */
+  void verbose(bool doPrint) noexcept { settings_.verbose = (doPrint ? 1 : 0); }
+  bool verbose() const noexcept { return static_cast<bool>(settings_.verbose); }
 
   /*! \brief Set up the problem parameters.
    * \param nrVar Number of variable

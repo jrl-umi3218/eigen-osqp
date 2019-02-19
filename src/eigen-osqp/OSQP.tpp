@@ -45,10 +45,10 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
   // Solve
   bool ret = osqp_solve(workspace_.get()) >= 0;
 
-if (ret)
-{
-  std::copy_n(workspace_->solution->x, result_.size(), result_.data());
-}
+  if (ret)
+  {
+    std::copy_n(workspace_->solution->x, result_.size(), result_.data());
+  }
 
   return ret;
 }
