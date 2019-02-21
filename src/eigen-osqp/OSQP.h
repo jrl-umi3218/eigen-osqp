@@ -126,6 +126,18 @@ public:
   template <typename TQ, typename TA>
   bool solve(const TQ & Q, const VectorConstRef & c, const TA & A, const VectorConstRef & AL, 
              const VectorConstRef & AU, const VectorConstRef & XL, const VectorConstRef & XU);
+  /*! \brief Solve the given problem.
+   * The function problem(int, int) needs to be called before calling this function.
+   * \tparam TQ Matrix type. Either a dense or compressed sparse matrix (or a reference to it).
+   * \tparam TA Matrix type. Either a dense or compressed sparse matrix (or a reference to it).
+   * \param Q Quadratic part of the cost.
+   * \param c Linear part of the cost.
+   * \param A Constraint matrix.
+   * \param AL Lower bound of the constraints.
+   * \param AU Upper bound of the constraints.
+   */
+  template <typename TQ, typename TA>
+  bool solve(const TQ & Q, const VectorConstRef & c, const TA & A, const VectorConstRef & AL, const VectorConstRef & AU);
 
   // Results info
   /*! \brief Get number of iterations taken. */
