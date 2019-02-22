@@ -6,7 +6,7 @@ namespace Eigen
 
 CSCMatrix::CSCMatrix()
 {
-  memset(&matrix_, 0, sizeof(csc));
+  matrix_ = {0, 0, 0, nullptr, nullptr, nullptr, 0};
 }
 
 CSCMatrix::CSCMatrix(const MatrixConstRef & mat, bool doAddIdentity)
