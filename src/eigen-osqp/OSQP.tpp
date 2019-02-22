@@ -106,4 +106,40 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
   return ret;
 }
 
+template <typename TQ>
+bool solve(const TQ & Q, const VectorConstRef & c)
+{
+  static_assert(std::is_convertible<TQ, MatrixDense>::value || std::is_convertible<TQ, MatrixSparse>::value,
+                "The type of Q should be at least convertible to an Eigen dense or sparse matrix of type c_float");
+
+  // Check data
+  assert(Q.rows() == Q.cols());
+  assert(Q.rows() == c.rows());
+
+  P_.update(Q);
+  data_.P = P_.matrix();
+
+  // Copy linear part of cost
+  std::copy_n(c.data(), c.size(), q_.begin());
+
+  data_.q = q_.data();
+
+  // Initialize workspace_ if necessary
+  if(doInitWorkspace_)
+  {
+    workspace_.reset(osqp_setup(&data_, &settings_));
+    doInitWorkspace_ = false;
+  }
+
+  // Solve
+  bool ret = osqp_solve(workspace_.get()) >= 0;
+
+  if (ret)
+  {
+    std::copy_n(workspace_->solution->x, result_.size(), result_.data());
+  }
+
+  return ret;
+}
+
 } // Eigen

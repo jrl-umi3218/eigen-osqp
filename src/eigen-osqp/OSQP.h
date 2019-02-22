@@ -138,6 +138,14 @@ public:
    */
   template <typename TQ, typename TA>
   bool solve(const TQ & Q, const VectorConstRef & c, const TA & A, const VectorConstRef & AL, const VectorConstRef & AU);
+  /*! \brief Solve unconstrained problem.
+   * The function problem(int, int) needs to be called before calling this function.
+   * \tparam TQ Matrix type. Either a dense or compressed sparse matrix (or a reference to it).
+   * \param Q Quadratic part of the cost.
+   * \param c Linear part of the cost.
+   */
+  template <typename TQ>
+  bool solve(const TQ & Q, const VectorConstRef & c);
 
   // Results info
   /*! \brief Get number of iterations taken. */
