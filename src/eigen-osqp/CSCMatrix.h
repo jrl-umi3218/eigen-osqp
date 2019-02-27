@@ -17,26 +17,23 @@ struct EIGEN_OSQP_DLLAPI CSCMatrix
   /*! \brief Default constructor. Allocate memory for an empty matrix */
   CSCMatrix();
 
-  /*! \brief Dense matrix to CSC conversion.
-   * \param mat Dense matrix to convert.
-   * \param doAddIdentity Ask to generate an identity matrix block under the converted matrix. Default is false.
-   */
-  CSCMatrix(const MatrixConstRef & mat, bool doAddIdentity = false);
-  /*! \brief Sparse matrix to CSC conversion.
-   * \param mat Sparse matrix to convert.
-   * \param doAddIdentity Ask to generate an identity matrix block under the converted matrix. Default is false.
-   */
-  CSCMatrix(const MatrixCompressSparseConstRef & mat, bool doAddIdentity = false);
   /*! \brief Update current csc matrix to a new one.
    * \param mat Dense matrix to convert.
-   * \param doAddIdentity Ask to generate an identity matrix block under the converted matrix. Default is false.
    */
-  void update(const MatrixConstRef & mat, bool doAddIdentity = false);
+  void updateDefault(const MatrixConstRef & mat);
+  /*! \brief Update current csc matrix to a new one and add an identity matrix beneath it.
+   * \param mat Dense matrix to convert.
+   */
+  void updateAndAddIdentity(const MatrixConstRef & mat);
   /*! \brief Update current csc matrix to a new one.
-   * \param mat Sparse matrix to convert.
-   * \param doAddIdentity Ask to generate an identity matrix block under the converted matrix. Default is false.
+   * \param mat Compress sparse matrix to convert.
    */
-  void update(const MatrixCompressSparseConstRef & mat, bool doAddIdentity = false);
+  void updateDefault(const MatrixCompressSparseConstRef & mat);
+  /*! \brief Update current csc matrix to a new one and add an identity matrix beneath it.
+   * \param mat Compress sparse matrix to convert.
+   */
+  void updateAndAddIdentity(const MatrixCompressSparseConstRef & mat);
+
   /*! \brief Get the csc matrix pointer */
   csc * matrix() noexcept { return &matrix_; }
 
@@ -46,11 +43,7 @@ struct EIGEN_OSQP_DLLAPI CSCMatrix
   MatrixSparse toSparseEigen() const;
 
 private:
-  void initParameters(Index rows, Index cols, Index newSize, bool doAddIdentity);
-  void updateDefault(const MatrixConstRef & mat);
-  void updateAndAddIdentity(const MatrixConstRef & mat);
-  void updateDefault(const MatrixCompressSparseConstRef & mat);
-  void updateAndAddIdentity(const MatrixCompressSparseConstRef & mat);
+  void initParameters(Index rows, Index cols, Index newSize, Index nrIdVar);
 
 private:
   csc matrix_; /*!< OSQP sparse matrix representation */

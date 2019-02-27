@@ -17,13 +17,14 @@ BOOST_FIXTURE_TEST_CASE(DENSE_MATRIX, QP1Dense)
         BOOST_REQUIRE_SMALL(std::abs(matA(i,j) - matConvA(i,j)), 1e-10);
   };
 
-  Eigen::CSCMatrix cscA(A);
+  Eigen::CSCMatrix cscA{};
+  cscA.updateDefault(A);
   Eigen::MatrixXd convA = cscA.toDenseEigen();
 
   checkMatrix(A, convA);
 
   // Add block identity matrix underneath
-  cscA.update(A, true);
+  cscA.updateAndAddIdentity(A);
   Eigen::MatrixXd AId(A.rows() + nrvar, A.cols());
   AId.block(0, 0, A.rows(), A.cols()) = A;
   AId.block(A.rows(), 0, nrvar, nrvar).setIdentity();
@@ -51,13 +52,14 @@ BOOST_FIXTURE_TEST_CASE(SPARSE_MATRIX, QP1Sparse)
     }
   };
 
-  Eigen::CSCMatrix cscA(A);
+  Eigen::CSCMatrix cscA{};
+  cscA.updateDefault(A);
   MatrixSparse convA = cscA.toSparseEigen();
 
   checkMatrix(A, convA);
 
   // Add block identity matrix underneath
-  cscA.update(A, true);
+  cscA.updateAndAddIdentity(A);
 
   Eigen::MatrixXd tmp(A.rows() + nrvar, A.cols());
   tmp.block(0, 0, A.rows(), A.cols()) = A;

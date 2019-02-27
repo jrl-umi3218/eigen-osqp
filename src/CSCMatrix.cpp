@@ -5,45 +5,91 @@ namespace Eigen
 {
 
 CSCMatrix::CSCMatrix()
+  : matrix_{0, 0, 0, nullptr, nullptr, nullptr, 0}
 {
-  matrix_ = {0, 0, 0, nullptr, nullptr, nullptr, 0};
 }
 
-CSCMatrix::CSCMatrix(const MatrixConstRef & mat, bool doAddIdentity)
-: CSCMatrix()
+void CSCMatrix::updateDefault(const MatrixConstRef & mat)
 {
-  doAddIdentity ? updateAndAddIdentity(mat) : update(mat);
-}
+  initParameters(mat.rows(), mat.cols(), mat.size(), 0);
 
-CSCMatrix::CSCMatrix(const MatrixCompressSparseConstRef & mat, bool doAddIdentity)
-: CSCMatrix()
-{
-  doAddIdentity ? updateAndAddIdentity(mat) : update(mat);
-}
-
-void CSCMatrix::update(const MatrixConstRef & mat, bool doAddIdentity)
-{
-  initParameters(mat.rows(), mat.cols(), mat.size(), doAddIdentity);
-  if(doAddIdentity)
+  Index i = 0;
+  const auto* data = mat.data();
+  Eigen::Index cols = mat.cols();
+  Eigen::Index rows = mat.rows();
+  for(Index col = 0; col < cols; ++col) // Faster than using std::copy
   {
-    updateAndAddIdentity(mat);
-  }
-  else
-  {
-    updateDefault(mat);
+    p_[col] = i;
+    for(Index row = 0; row < rows; ++row)
+    {
+      i_[i] = row;
+      x_[i] = *(data++);
+      ++i;
+    }
   }
 }
 
-void CSCMatrix::update(const MatrixCompressSparseConstRef & mat, bool doAddIdentity)
+void CSCMatrix::updateAndAddIdentity(const MatrixConstRef & mat)
 {
-  initParameters(mat.rows(), mat.cols(), mat.nonZeros(), doAddIdentity);
-  if(doAddIdentity)
+  initParameters(mat.rows(), mat.cols(), mat.size(), mat.cols());
+
+  Index i = 0;
+  const auto* data = mat.data();
+  Eigen::Index cols = mat.cols();
+  Eigen::Index rows = mat.rows();
+  for(Index col = 0; col < cols; ++col) // Faster than using std::copy
   {
-    updateAndAddIdentity(mat);
+    p_[col] = i;
+
+    for(Index row = 0; row < rows; ++row)
+    {
+      i_[i] = row;
+      x_[i] = *(data++);
+      ++i;
+    }
+
+    i_[i] = rows + col;
+    x_[i] = 1.0;
+    ++i;
   }
-  else
+}
+
+void CSCMatrix::updateDefault(const MatrixCompressSparseConstRef & mat)
+{
+  initParameters(mat.rows(), mat.cols(), mat.nonZeros(), 0);
+
+  std::copy_n(mat.outerIndexPtr(), mat.outerSize(), p_.begin()); // Copy column start index of non-zeros
+  std::copy_n(mat.innerIndexPtr(), mat.nonZeros(), i_.begin()); // Copy row index of non-zeros
+  std::copy_n(mat.valuePtr(), mat.nonZeros(), x_.begin()); // Copy matrix data
+}
+
+void CSCMatrix::updateAndAddIdentity(const MatrixCompressSparseConstRef & mat)
+{
+  initParameters(mat.rows(), mat.cols(), mat.nonZeros(), mat.cols());
+
+  const auto* innerIndexIndexPtr = mat.innerIndexPtr();
+  const auto* outerIndexIndexPtr = mat.outerIndexPtr();
+  const auto* valueptr = mat.valuePtr();
+  auto iItr = i_.begin();
+  auto xItr = x_.begin();
+  auto pItr = p_.begin();
+  int innerNNZs;
+  for (int k = 0; k < mat.outerSize(); ++k)
   {
-    updateDefault(mat);
+    // Copy columns
+    *(pItr++) = *(outerIndexIndexPtr++) + k; // A value from the identity matrix is added for each column
+
+    innerNNZs = *outerIndexIndexPtr - *(outerIndexIndexPtr - 1); // Get number of non-zeros
+
+    // Copy rows
+    iItr = std::copy_n(innerIndexIndexPtr, innerNNZs, iItr); // Copy rows
+    innerIndexIndexPtr += innerNNZs;
+    *(iItr++) = mat.rows() + k; // Add the identity matrix row
+
+    // values
+    xItr = std::copy_n(valueptr, innerNNZs, xItr); // Copy values
+    valueptr += innerNNZs;
+    *(xItr++) = 1.; // Add the identity matrix value
   }
 }
 
@@ -83,100 +129,21 @@ MatrixSparse CSCMatrix::toSparseEigen() const
  * Private methods
  */
 
-void CSCMatrix::initParameters(Index rows, Index cols, Index newSize, bool doAddIdentity)
+void CSCMatrix::initParameters(Index rows, Index cols, Index newSize, Index nrIdVar)
 {
-  Index nrVar = 0;
-  if(doAddIdentity)
-    nrVar = cols;
-  if(matrix_.nzmax != nrVar + newSize)
+  if(matrix_.nzmax != nrIdVar + newSize)
   {
-    matrix_.nzmax = nrVar + newSize;
-    matrix_.m = nrVar + rows;
+    matrix_.nzmax = nrIdVar + newSize;
+    matrix_.m = nrIdVar + rows;
     matrix_.n = cols;
     p_.resize(cols + 1);
     matrix_.p = p_.data();
-    i_.resize(nrVar + newSize);
+    i_.resize(nrIdVar + newSize);
     p_.back() = i_.size();
     matrix_.i = i_.data();
-    x_.resize(nrVar + newSize);
+    x_.resize(nrIdVar + newSize);
     matrix_.x = x_.data();
     matrix_.nz = -1;
-  }
-}
-
-void CSCMatrix::updateDefault(const MatrixConstRef & mat)
-{
-  Index i = 0;
-  const auto* data = mat.data();
-  Eigen::Index cols = mat.cols();
-  Eigen::Index rows = mat.rows();
-  for(Index col = 0; col < cols; ++col) // Faster than using std::copy
-  {
-    p_[col] = i;
-    for(Index row = 0; row < rows; ++row)
-    {
-      i_[i] = row;
-      x_[i] = *(data++);
-      ++i;
-    }
-  }
-}
-
-void CSCMatrix::updateAndAddIdentity(const MatrixConstRef & mat)
-{
-  Index i = 0;
-  const auto* data = mat.data();
-  Eigen::Index cols = mat.cols();
-  Eigen::Index rows = mat.rows();
-  for(Index col = 0; col < cols; ++col) // Faster than using std::copy
-  {
-    p_[col] = i;
-
-    for(Index row = 0; row < rows; ++row)
-    {
-      i_[i] = row;
-      x_[i] = *(data++);
-      ++i;
-    }
-
-    i_[i] = rows + col;
-    x_[i] = 1.0;
-    ++i;
-  }
-}
-
-void CSCMatrix::updateDefault(const MatrixCompressSparseConstRef & mat)
-{
-  std::copy_n(mat.outerIndexPtr(), mat.outerSize(), p_.begin()); // Copy column start index of non-zeros
-  std::copy_n(mat.innerIndexPtr(), mat.nonZeros(), i_.begin()); // Copy row index of non-zeros
-  std::copy_n(mat.valuePtr(), mat.nonZeros(), x_.begin()); // Copy matrix data
-}
-
-void CSCMatrix::updateAndAddIdentity(const MatrixCompressSparseConstRef & mat)
-{
-  const auto* innerIndexIndexPtr = mat.innerIndexPtr();
-  const auto* outerIndexIndexPtr = mat.outerIndexPtr();
-  const auto* valueptr = mat.valuePtr();
-  auto iItr = i_.begin();
-  auto xItr = x_.begin();
-  auto pItr = p_.begin();
-  int innerNNZs;
-  for (int k = 0; k < mat.outerSize(); ++k)
-  {
-    // Copy columns
-    *(pItr++) = *(outerIndexIndexPtr++) + k; // A value from the identity matrix is added for each column
-
-    innerNNZs = *outerIndexIndexPtr - *(outerIndexIndexPtr - 1); // Get number of non-zeros
-
-    // Copy rows
-    iItr = std::copy_n(innerIndexIndexPtr, innerNNZs, iItr); // Copy rows
-    innerIndexIndexPtr += innerNNZs;
-    *(iItr++) = mat.rows() + k; // Add the identity matrix row
-
-    // values
-    xItr = std::copy_n(valueptr, innerNNZs, xItr); // Copy values
-    valueptr += innerNNZs;
-    *(xItr++) = 1.; // Add the identity matrix value
   }
 }
 

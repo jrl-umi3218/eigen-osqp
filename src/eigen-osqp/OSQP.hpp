@@ -20,9 +20,9 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
   assert(AL.rows() == AU.rows());
   assert(XL.rows() == XU.rows());
 
-  P_.update(Q);
+  P_.updateDefault(Q);
   data_.P = P_.matrix();
-  A_.update(A, true);
+  A_.updateAndAddIdentity(A);
   data_.A = A_.matrix();
 
   auto blItr = bl_.begin();
@@ -72,9 +72,9 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
   assert(A.rows() == AL.rows());
   assert(A.cols() == Q.rows());
 
-  P_.update(Q);
+  P_.updateDefault(Q);
   data_.P = P_.matrix();
-  A_.update(A);
+  A_.updateDefault(A);
   data_.A = A_.matrix();
 
   // Copy linear part of cost
@@ -116,7 +116,7 @@ bool solve(const TQ & Q, const VectorConstRef & c)
   assert(Q.rows() == Q.cols());
   assert(Q.rows() == c.rows());
 
-  P_.update(Q);
+  P_.updateDefault(Q);
   data_.P = P_.matrix();
 
   // Copy linear part of cost
