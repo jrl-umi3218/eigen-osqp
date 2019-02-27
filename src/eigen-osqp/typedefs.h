@@ -2,7 +2,7 @@
 
 #include <Eigen/Core>
 #include <Eigen/SparseCore>
-#include <glob_opts.h> // For c_float
+#include <osqp.h>
 
 // Matrices must be Column-major (default) !!
 // The library won't work for Row-major matrices.
