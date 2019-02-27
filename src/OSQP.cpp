@@ -11,12 +11,12 @@ namespace Eigen
 OSQP::OSQP()
 : doInitWorkspace_(true)
 , workspace_(nullptr)
+, data_{0, 0, nullptr, nullptr, nullptr, nullptr, nullptr}
 {
   //FIXME Check later for better settings
   osqp_set_default_settings(&settings_);
   polish(true);
   verbose(false);
-  memset(&data_, 0, sizeof(OSQPData));
 }
 
 void OSQP::problem(int nrVar, int nrConstr)
