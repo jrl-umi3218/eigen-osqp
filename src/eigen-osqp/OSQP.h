@@ -176,4 +176,4 @@ private:
 
 } // namespace Eigen
 
-#include "OSQP.tpp"
+#include "OSQP.hpp"
