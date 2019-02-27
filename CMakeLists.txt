@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 include(cmake/base.cmake)
 include(cmake/boost.cmake)
 include(cmake/eigen.cmake)
-INCLUDE(cmake/msvc-specific.cmake)
+include(cmake/cxx11.cmake)
+include(cmake/msvc-specific.cmake)
 
 set(PROJECT_NAME eigen-osqp)
 set(PROJECT_DESCRIPTION "OSQP QP solver through Eigen3 library.")
@@ -23,7 +24,7 @@ option(COMPILE_EXAMPLES "Compile examples." ON)
 
 setup_project()
 
-set(CXX_STANDARD 11)
+PROJECT_USE_CXX11()
 
 if(UNIX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
