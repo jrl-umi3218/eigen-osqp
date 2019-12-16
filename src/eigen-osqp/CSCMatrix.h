@@ -5,7 +5,6 @@
 
 #include <Eigen/Core>
 #include <Eigen/SparseCore>
-
 #include <osqp.h>
 
 namespace Eigen

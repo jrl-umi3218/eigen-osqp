@@ -1,12 +1,11 @@
 #pragma once
 
+#include "CSCMatrix.h"
 #include "exportdecl.h"
 
+#include <Eigen/Core>
 #include <memory>
 
-#include <Eigen/Core>
-
-#include <eigen-osqp/CSCMatrix.h>
 
 /*! \brief Deleter object for OSQPWorkspace. */
 struct EIGEN_OSQP_DLLAPI OSQPWorkspaceDeleter

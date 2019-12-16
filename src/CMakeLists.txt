@@ -1,11 +1,11 @@
 set(SOURCES OSQP.cpp CSCMatrix.cpp)
 set(HEADERS eigen-osqp/OSQP.h eigen-osqp/CSCMatrix.h eigen-osqp/typedefs.h eigen-osqp/OSQP.hpp eigen-osqp/exportdecl.h)
 
-add_definitions("-DEIGEN_OSQP_EXPORTS")
-
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
-target_link_libraries(${PROJECT_NAME} osqp::osqp)
-set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION 0 VERSION 1.0.0)
+target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
+target_compile_definitions(${PROJECT_NAME} PRIVATE EIGEN_OSQP_EXPORTS)
+target_link_libraries(${PROJECT_NAME} osqp::osqp Eigen3::Eigen)
+set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR} VERSION ${PROJECT_VERSION})
 if(${USE_LTO})
   target_compile_options(${PROJECT_NAME} PRIVATE "-flto")
   set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-flto")
@@ -14,7 +14,8 @@ endif()
 set(INSTALL_PATH include/${PROJECT_NAME})
 install(FILES ${HEADERS} DESTINATION ${INSTALL_PATH})
 install(TARGETS ${PROJECT_NAME}
+  EXPORT "${TARGETS_EXPORT_NAME}"
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
