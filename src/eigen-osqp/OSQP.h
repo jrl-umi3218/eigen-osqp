@@ -30,7 +30,7 @@ public:
   /*! \brief Default constructor. */
   OSQP();
   /*! \brief Default destructor. */
-  ~OSQP() noexcept = default;
+  ~OSQP() noexcept;
 
   // Access to settings.
   /*! \brief ADMM step rho. Default is 0.1. */
