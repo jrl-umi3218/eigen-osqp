@@ -1,7 +1,6 @@
 macro(generate_example name)
     add_executable(${name} ${name}.cpp)
-    target_link_libraries(${name} ${PROJECT_NAME})
-    target_include_directories(${name} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../src>)
+    target_link_libraries(${name} PUBLIC ${PROJECT_NAME})
 endmacro()
 
 generate_example(dense_matrix_qp)

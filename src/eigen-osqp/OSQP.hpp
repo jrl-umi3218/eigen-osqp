@@ -111,7 +111,7 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
 }
 
 template <typename TQ>
-bool solve(const TQ & Q, const VectorConstRef & c)
+bool OSQP::solve(const TQ & Q, const VectorConstRef & c)
 {
   static_assert(std::is_convertible<TQ, MatrixDense>::value || std::is_convertible<TQ, MatrixSparse>::value,
                 "The type of Q should be at least convertible to an Eigen dense or sparse matrix of type c_float");

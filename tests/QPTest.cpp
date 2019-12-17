@@ -5,7 +5,7 @@
 #include <boost/test/floating_point_comparison.hpp>
 #include <Eigen/Dense>
 
-#include "eigen-osqp/OSQP.h"
+#include <eigen-osqp/OSQP.h>
 #include "systems.h"
 
 BOOST_FIXTURE_TEST_CASE(OSQP_DENSE, QP1Dense)

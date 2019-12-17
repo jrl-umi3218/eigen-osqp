@@ -1,15 +1,10 @@
-set(BOOST_COMPONENTS unit_test_framework)
-search_for_boost()
-
-include_directories("${PROJECT_SOURCE_DIR}/src")
-include_directories(${Boost_INCLUDE_DIRS})
+find_package(Boost REQUIRED COMPONENTS unit_test_framework)
 
 macro(addtest testname)
   add_executable(${testname} ${testname}.cpp)
-  target_link_libraries(${testname} ${Boost_LIBRARIES} ${PROJECT_NAME})
+  target_link_libraries(${testname} PUBLIC ${PROJECT_NAME} Boost::unit_test_framework)
   add_test(${testname}Unit ${testname})
-  # Adding a project configuration file (for MSVC only)
-  GENERATE_MSVC_DOT_USER_FILE(${testname})
+  generate_msvc_dot_user_file(${testname})
 endmacro()
 
 addtest(CSCMatrixTest)
