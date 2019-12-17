@@ -20,7 +20,7 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
   assert(AL.rows() == AU.rows());
   assert(XL.rows() == XU.rows());
 
-  P_.updateDefault(Q);
+  P_.updateTriangularDefault(Q);
   data_.P = P_.matrix();
   A_.updateAndAddIdentity(A);
   data_.A = A_.matrix();
@@ -43,8 +43,10 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
   // Initialize workspace_ if necessary
   if(doInitWorkspace_)
   {
-    auto* tmpWork = workspace_.get();
+    OSQPWorkspace* tmpWork;
     doInitWorkspace_ = osqp_setup(&tmpWork, &data_, &settings_); // return 0 if success
+    workspace_.reset(tmpWork);
+    tmpWork = nullptr;
   }
 
   // Solve
@@ -72,7 +74,7 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
   assert(A.rows() == AL.rows());
   assert(A.cols() == Q.rows());
 
-  P_.updateDefault(Q);
+  P_.updateTriangularDefault(Q);
   data_.P = P_.matrix();
   A_.updateDefault(A);
   data_.A = A_.matrix();
@@ -91,8 +93,10 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
   // Initialize workspace_ if necessary
   if(doInitWorkspace_)
   {
-    auto* tmpWork = workspace_.get();
+    OSQPWorkspace* tmpWork;
     doInitWorkspace_ = osqp_setup(&tmpWork, &data_, &settings_); // return 0 if success
+    workspace_.reset(tmpWork);
+    tmpWork = nullptr;
   }
 
   // Solve
@@ -116,7 +120,7 @@ bool solve(const TQ & Q, const VectorConstRef & c)
   assert(Q.rows() == Q.cols());
   assert(Q.rows() == c.rows());
 
-  P_.updateDefault(Q);
+  P_.updateTriangularDefault(Q);
   data_.P = P_.matrix();
 
   // Copy linear part of cost
@@ -127,8 +131,10 @@ bool solve(const TQ & Q, const VectorConstRef & c)
   // Initialize workspace_ if necessary
   if(doInitWorkspace_)
   {
-    auto* tmpWork = workspace_.get();
+    OSQPWorkspace* tmpWork;
     doInitWorkspace_ = osqp_setup(&tmpWork, &data_, &settings_); // return 0 if success
+    workspace_.reset(tmpWork);
+    tmpWork = nullptr;
   }
 
   // Solve

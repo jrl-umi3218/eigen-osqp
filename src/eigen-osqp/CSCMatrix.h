@@ -16,6 +16,11 @@ struct EIGEN_OSQP_DLLAPI CSCMatrix
   /*! \brief Default constructor. Allocate memory for an empty matrix */
   CSCMatrix();
 
+  /*! \brief Update current csc matrix to a new one. Only the upper triangular part is considered.
+   * \note It is up to the user to check that the matrix is symmetrical.
+   * \param mat Dense matrix to convert.
+   */
+  void updateTriangularDefault(const MatrixConstRef & mat);
   /*! \brief Update current csc matrix to a new one.
    * \param mat Dense matrix to convert.
    */
@@ -24,6 +29,11 @@ struct EIGEN_OSQP_DLLAPI CSCMatrix
    * \param mat Dense matrix to convert.
    */
   void updateAndAddIdentity(const MatrixConstRef & mat);
+  /*! \brief Update current csc matrix to a new one. Only the upper triangular part is considered.
+   * \note It is up to the user to check that the matrix is symmetrical.
+   * \param mat Dense matrix to convert.
+   */
+  void updateTriangularDefault(const MatrixCompressSparseConstRef & mat);
   /*! \brief Update current csc matrix to a new one.
    * \param mat Compress sparse matrix to convert.
    */

@@ -4,9 +4,41 @@
 namespace Eigen
 {
 
+template <typename T>
+Index triangular_size(T mat)
+{
+  assert(mat.rows() == mat.cols());
+
+  Index size = 0;
+  for (Index i = 1; i <= mat.rows(); ++i)
+    size += i;
+
+  return size;
+}
+
 CSCMatrix::CSCMatrix()
   : matrix_{0, 0, 0, nullptr, nullptr, nullptr, 0}
 {
+}
+
+void CSCMatrix::updateTriangularDefault(const MatrixConstRef & mat)
+{
+  // Size of triangular matrix is sum_{i=1}^{N} i
+  initParameters(mat.rows(), mat.cols(), triangular_size(mat), 0);
+
+  Index i = 0;
+  Eigen::Index cols = mat.cols();
+  Eigen::Index rows = mat.rows();
+  for(Index col = 0; col < cols; ++col) // Faster than using std::copy
+  {
+    p_[col] = i;
+    for(Index row = 0; row < rows && row <= col; ++row)
+    {
+      i_[i] = row;
+      x_[i] = mat(row, col);
+      ++i;
+    }
+  }
 }
 
 void CSCMatrix::updateDefault(const MatrixConstRef & mat)
@@ -52,6 +84,44 @@ void CSCMatrix::updateAndAddIdentity(const MatrixConstRef & mat)
     x_[i] = 1.0;
     ++i;
   }
+}
+
+void CSCMatrix::updateTriangularDefault(const MatrixCompressSparseConstRef & mat)
+{
+  // We can not initialize first since we don't know how many values are non-zero in the upper triangular part.
+  // But we do know the maximum number of elements.
+  Index maxValues = triangular_size(mat);
+  i_.clear();
+  x_.clear();
+  p_.clear();
+  i_.reserve(maxValues);
+  x_.reserve(maxValues);
+  p_.reserve(mat.cols() + 1);
+
+  const auto* innerIndexIndexPtr = mat.innerIndexPtr();
+  const auto* outerIndexIndexPtr = mat.outerIndexPtr();
+  const auto* valueptr = mat.valuePtr();
+  int innerNNZs;
+  for (int k = 0; k < mat.outerSize(); ++k)
+  {
+    // Copy columns
+    p_.push_back(*(outerIndexIndexPtr++));
+
+    innerNNZs = *outerIndexIndexPtr - *(outerIndexIndexPtr - 1); // Get number of non-zeros
+
+    // Copy rows
+    for (int i = 0; i < innerNNZs; ++i, ++innerIndexIndexPtr, ++valueptr)
+    {
+      if (*innerIndexIndexPtr <= k) // Get only the upper part
+      {
+        i_.push_back(*innerIndexIndexPtr);
+        x_.push_back(*valueptr);
+      }
+    }
+  }
+
+  // Initialize all parameters correctly. Inserted values in matrices won't be erased.
+  initParameters(mat.rows(), mat.cols(), x_.size(), 0);
 }
 
 void CSCMatrix::updateDefault(const MatrixCompressSparseConstRef & mat)

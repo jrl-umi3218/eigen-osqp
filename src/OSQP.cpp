@@ -19,18 +19,6 @@ OSQP::OSQP()
   verbose(false);
 }
 
-OSQP::~OSQP() noexcept
-{
-  if (data_.A)
-  {
-    delete data_.A;
-  }
-  if (data_.P)
-  {
-    delete data_.P;
-  }
-}
-
 void OSQP::problem(int nrVar, int nrConstr)
 {
   if(data_.n != nrVar || data_.m != nrConstr)

@@ -6,8 +6,9 @@
 #include <Eigen/Core>
 #include <memory>
 
-
-/*! \brief Deleter object for OSQPWorkspace. */
+/*! \brief Deleter object for OSQPWorkspace.
+ * \note This function also delete indirectly data_.
+ */
 struct EIGEN_OSQP_DLLAPI OSQPWorkspaceDeleter
 {
   void operator()(OSQPWorkspace * ptr) const;
@@ -30,7 +31,7 @@ public:
   /*! \brief Default constructor. */
   OSQP();
   /*! \brief Default destructor. */
-  ~OSQP() noexcept;
+  ~OSQP() noexcept = default;
 
   // Access to settings.
   /*! \brief ADMM step rho. Default is 0.1. */
