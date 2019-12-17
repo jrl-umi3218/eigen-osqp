@@ -1,42 +1,64 @@
 #pragma once
 
+#include "exportdecl.h"
+#include "typedefs.h"
+
 #include <Eigen/Core>
-
-#include <osqp/osqp.h>
-
-using MatrixConstRef = Eigen::Ref<const Eigen::MatrixXd>;
-using VectorConstRef = Eigen::Ref<const Eigen::VectorXd>;
+#include <Eigen/SparseCore>
+#include <osqp.h>
 
 namespace Eigen
 {
 
-/** Helper class to convert Eigen::Matrix to csc struct
- * expected by OSQP */
-struct CSCMatrix
+/*! \brief Helper class to convert Eigen::Matrix to csc struct expected by OSQP. */
+struct EIGEN_OSQP_DLLAPI CSCMatrix
 {
-  /** Default (empty) matrix */
+  /*! \brief Default constructor. Allocate memory for an empty matrix */
   CSCMatrix();
 
-  /** Dense matrix to CSC conversion */
-  CSCMatrix(const MatrixConstRef & mat);
+  /*! \brief Update current csc matrix to a new one. Only the upper triangular part is considered.
+   * \note It is up to the user to check that the matrix is symmetrical.
+   * \param mat Dense matrix to convert.
+   */
+  void updateTriangularDefault(const MatrixConstRef & mat);
+  /*! \brief Update current csc matrix to a new one.
+   * \param mat Dense matrix to convert.
+   */
+  void updateDefault(const MatrixConstRef & mat);
+  /*! \brief Update current csc matrix to a new one and add an identity matrix beneath it.
+   * \param mat Dense matrix to convert.
+   */
+  void updateAndAddIdentity(const MatrixConstRef & mat);
+  /*! \brief Update current csc matrix to a new one. Only the upper triangular part is considered.
+   * \note It is up to the user to check that the matrix is symmetrical.
+   * \param mat Dense matrix to convert.
+   */
+  void updateTriangularDefault(const MatrixCompressSparseConstRef & mat);
+  /*! \brief Update current csc matrix to a new one.
+   * \param mat Compress sparse matrix to convert.
+   */
+  void updateDefault(const MatrixCompressSparseConstRef & mat);
+  /*! \brief Update current csc matrix to a new one and add an identity matrix beneath it.
+   * \param mat Compress sparse matrix to convert.
+   */
+  void updateAndAddIdentity(const MatrixCompressSparseConstRef & mat);
 
-  /** Block identity + dense matrix to CSC conversion */
-  CSCMatrix(long long identity, const MatrixConstRef & mat);
+  /*! \brief Get the csc matrix pointer */
+  csc * matrix() noexcept { return &matrix_; }
 
-  void update(const MatrixConstRef & mat);
+  /*! \brief Convert csc matrix to Eigen dense matrix. */
+  MatrixDense toDenseEigen() const;
+  /*! \brief Convert csc matrix to Eigen sparse matrix. */
+  MatrixSparse toSparseEigen() const;
 
-  void update(long long identity, const MatrixConstRef & mat);
-
-  csc * matrix() { return &matrix_; }
-
-  /** For debugging */
-  Eigen::MatrixXd toEigen() const;
 private:
-  csc matrix_;
-  std::vector<c_int> p_;
-  std::vector<c_int> i_;
-  std::vector<c_float> x_;
-  void update(const MatrixConstRef & mat, long long start);
+  void initParameters(Index rows, Index cols, Index newSize, Index nrIdVar);
+
+private:
+  csc matrix_; /*!< OSQP sparse matrix representation */
+  std::vector<c_int> p_; /*!< Vector of column index of the csc */
+  std::vector<c_int> i_; /*!< Vector of row index of the csc */
+  std::vector<c_float> x_; /*!< Vector of values of the csc */
 };
 
 } // namespace Eigen

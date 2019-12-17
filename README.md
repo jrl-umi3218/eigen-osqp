@@ -15,7 +15,7 @@ To compile you need the following tools:
  * [g++]()
  * [Boost](http://www.boost.org/doc/libs/1_58_0/more/getting_started/unix-variants.html) >= 1.49
  * [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) >= 3.2
- * [OSQP](https://github.com/oxfordcontrol/osqp)
+ * [OSQP](https://github.com/oxfordcontrol/osqp) >= 0.6.0
 
 #### Building
 
