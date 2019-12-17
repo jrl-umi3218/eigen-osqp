@@ -35,7 +35,7 @@ endif()
 
 # add OSQP library
 add_project_dependency(Eigen3 REQUIRED)
-add_project_dependency(osqp REQUIRED)
+add_project_dependency(osqp REQUIRED ">= 0.6.0")
 
 add_subdirectory(src)
 

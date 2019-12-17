@@ -43,8 +43,8 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
   // Initialize workspace_ if necessary
   if(doInitWorkspace_)
   {
-    workspace_.reset(osqp_setup(&data_, &settings_));
-    doInitWorkspace_ = false;
+    auto* tmpWork = workspace_.get();
+    doInitWorkspace_ = osqp_setup(&tmpWork, &data_, &settings_); // return 0 if success
   }
 
   // Solve
@@ -91,8 +91,8 @@ bool OSQP::solve(const TQ & Q, const VectorConstRef & c, const TA & A, const Vec
   // Initialize workspace_ if necessary
   if(doInitWorkspace_)
   {
-    workspace_.reset(osqp_setup(&data_, &settings_));
-    doInitWorkspace_ = false;
+    auto* tmpWork = workspace_.get();
+    doInitWorkspace_ = osqp_setup(&tmpWork, &data_, &settings_); // return 0 if success
   }
 
   // Solve
@@ -127,8 +127,8 @@ bool solve(const TQ & Q, const VectorConstRef & c)
   // Initialize workspace_ if necessary
   if(doInitWorkspace_)
   {
-    workspace_.reset(osqp_setup(&data_, &settings_));
-    doInitWorkspace_ = false;
+    auto* tmpWork = workspace_.get();
+    doInitWorkspace_ = osqp_setup(&tmpWork, &data_, &settings_); // return 0 if success
   }
 
   // Solve
