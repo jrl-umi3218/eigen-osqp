@@ -1,3 +1,552 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <tagfile>
+  <compound kind="file">
+    <name>CSCMatrix.h</name>
+    <path>/home/runner/work/eigen-osqp/eigen-osqp/src/eigen-osqp/</path>
+    <filename>a00017</filename>
+    <includes id="a00020" name="exportdecl.h" local="yes" imported="no">exportdecl.h</includes>
+    <includes id="a00029" name="typedefs.h" local="yes" imported="no">typedefs.h</includes>
+    <includes id="a00023" name="OSQP.h" local="no" imported="no">osqp.h</includes>
+    <class kind="struct">Eigen::CSCMatrix</class>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>exportdecl.h</name>
+    <path>/home/runner/work/eigen-osqp/eigen-osqp/src/eigen-osqp/</path>
+    <filename>a00020</filename>
+    <member kind="define">
+      <type>#define</type>
+      <name>EIGEN_OSQP_DLLIMPORT</name>
+      <anchorfile>a00020.html</anchorfile>
+      <anchor>ab343d16425002c37ea78f070b5be1045</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>EIGEN_OSQP_DLLEXPORT</name>
+      <anchorfile>a00020.html</anchorfile>
+      <anchor>ac2cbd98accda2a6304cae11fe271bab7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>EIGEN_OSQP_DLLLOCAL</name>
+      <anchorfile>a00020.html</anchorfile>
+      <anchor>afa286fe87ac7034fe858a218ae5063f2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>EIGEN_OSQP_DLLAPI</name>
+      <anchorfile>a00020.html</anchorfile>
+      <anchor>a51288fe0815535abc613b52a8f1ee9de</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>EIGEN_OSQP_LOCAL</name>
+      <anchorfile>a00020.html</anchorfile>
+      <anchor>a4c7cb52d4090eefa82f0b8965f4a138d</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>OSQP.h</name>
+    <path>/home/runner/work/eigen-osqp/eigen-osqp/src/eigen-osqp/</path>
+    <filename>a00023</filename>
+    <includes id="a00017" name="CSCMatrix.h" local="yes" imported="no">CSCMatrix.h</includes>
+    <includes id="a00020" name="exportdecl.h" local="yes" imported="no">exportdecl.h</includes>
+    <includes id="a00026" name="OSQP.hpp" local="yes" imported="no">OSQP.hpp</includes>
+    <class kind="struct">OSQPWorkspaceDeleter</class>
+    <class kind="class">Eigen::OSQP</class>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>OSQP.hpp</name>
+    <path>/home/runner/work/eigen-osqp/eigen-osqp/src/eigen-osqp/</path>
+    <filename>a00026</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>README.md</name>
+    <path>/home/runner/work/eigen-osqp/eigen-osqp/</path>
+    <filename>a00032</filename>
+  </compound>
+  <compound kind="file">
+    <name>typedefs.h</name>
+    <path>/home/runner/work/eigen-osqp/eigen-osqp/src/eigen-osqp/</path>
+    <filename>a00029</filename>
+    <includes id="a00023" name="OSQP.h" local="no" imported="no">osqp.h</includes>
+    <member kind="typedef">
+      <type>Eigen::Matrix&lt; c_float, Eigen::Dynamic, Eigen::Dynamic &gt;</type>
+      <name>MatrixDense</name>
+      <anchorfile>a00029.html</anchorfile>
+      <anchor>a83d3621f495994d74bdd8b0105e02c6a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>Eigen::Matrix&lt; c_float, Eigen::Dynamic, 1 &gt;</type>
+      <name>VectorDense</name>
+      <anchorfile>a00029.html</anchorfile>
+      <anchor>a6894618738627412dbf40c5a3e4a2cf3</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>Eigen::Ref&lt; const MatrixDense &gt;</type>
+      <name>MatrixConstRef</name>
+      <anchorfile>a00029.html</anchorfile>
+      <anchor>a8fff7bdcddfec3ca6fa95238f99961f7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>Eigen::Ref&lt; const VectorDense &gt;</type>
+      <name>VectorConstRef</name>
+      <anchorfile>a00029.html</anchorfile>
+      <anchor>ab56de2f0eb6c49e9d85c9fe7b6d433c7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>Eigen::SparseMatrix&lt; c_float &gt;</type>
+      <name>MatrixSparse</name>
+      <anchorfile>a00029.html</anchorfile>
+      <anchor>a86e612127b56c466c9ff3e3740e2430a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>Eigen::Ref&lt; const MatrixSparse, Eigen::StandardCompressedFormat &gt;</type>
+      <name>MatrixCompressSparseConstRef</name>
+      <anchorfile>a00029.html</anchorfile>
+      <anchor>a2ca715c07c637c5a74b24ce7ba3c126d</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>Eigen::CSCMatrix</name>
+    <filename>a00584.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>CSCMatrix</name>
+      <anchorfile>a00584.html</anchorfile>
+      <anchor>a360d8238da59348bb0e693bb4fa932c4</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>updateTriangularDefault</name>
+      <anchorfile>a00584.html</anchorfile>
+      <anchor>aa7f930870294c67b6ec9de487c8216c4</anchor>
+      <arglist>(const MatrixConstRef &amp;mat)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>updateDefault</name>
+      <anchorfile>a00584.html</anchorfile>
+      <anchor>acd7dd76a827a601750ecbd3fe6082f38</anchor>
+      <arglist>(const MatrixConstRef &amp;mat)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>updateAndAddIdentity</name>
+      <anchorfile>a00584.html</anchorfile>
+      <anchor>a064f5a5b3a58a50450685dfee8fe3eb1</anchor>
+      <arglist>(const MatrixConstRef &amp;mat)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>updateTriangularDefault</name>
+      <anchorfile>a00584.html</anchorfile>
+      <anchor>a39452e7bb00ae363659c507c033926ff</anchor>
+      <arglist>(const MatrixCompressSparseConstRef &amp;mat)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>updateDefault</name>
+      <anchorfile>a00584.html</anchorfile>
+      <anchor>a18df7470bf908f18dc43309bd2f66544</anchor>
+      <arglist>(const MatrixCompressSparseConstRef &amp;mat)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>updateAndAddIdentity</name>
+      <anchorfile>a00584.html</anchorfile>
+      <anchor>abcd61680f399c94166efa43d755c454e</anchor>
+      <arglist>(const MatrixCompressSparseConstRef &amp;mat)</arglist>
+    </member>
+    <member kind="function">
+      <type>csc *</type>
+      <name>matrix</name>
+      <anchorfile>a00584.html</anchorfile>
+      <anchor>a3d6fef7ece56946e662705376020cc4d</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>MatrixDense</type>
+      <name>toDenseEigen</name>
+      <anchorfile>a00584.html</anchorfile>
+      <anchor>a9c904fb28398221ceab6b9b1f062fab2</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>MatrixSparse</type>
+      <name>toSparseEigen</name>
+      <anchorfile>a00584.html</anchorfile>
+      <anchor>ae4c41c1711d790fc046f0cb3ed1fd798</anchor>
+      <arglist>() const</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>Eigen::OSQP</name>
+    <filename>a00592.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>OSQP</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a2a3daf386d5956e0787d05d824657da6</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~OSQP</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a126658683f6fa003f600b8c100db37fa</anchor>
+      <arglist>() noexcept=default</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>admmStepRho</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>ae4f9499af580511ab2288e53e22ca495</anchor>
+      <arglist>(c_float rho) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_float</type>
+      <name>admmStepRho</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>af767f7ae20d5874b3fdee94448d2bac1</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>admmStepSigma</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a8d369281a53e2f08badf4a9e2925b0ed</anchor>
+      <arglist>(c_float sigma) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_float</type>
+      <name>admmStepSigma</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a6e080e243c062bff9264e459647f257c</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>scalingIter</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a4270ac73fa08978d1a65d92f24192176</anchor>
+      <arglist>(c_int scaling) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_int</type>
+      <name>scalingIter</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a01226a18d698cbfa2b528382bc3c2b90</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>maxIter</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>aa2958b330d269e713a026123a600b45b</anchor>
+      <arglist>(c_int maxIter) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_int</type>
+      <name>maxIter</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a7b3713036e62e7d70366e01fdf056b2f</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>absConvergenceTol</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a36c60e810889cbeee7300a9b9208abe3</anchor>
+      <arglist>(c_float tol) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_float</type>
+      <name>absConvergenceTol</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>abe34ebf07dbe19afeafdaed31c64fabe</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>relConvergenceTol</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a0a0129fc90087fdd981b054c537a0167</anchor>
+      <arglist>(c_float tol) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_float</type>
+      <name>relConvergenceTol</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a53d88d1b29d7f6b849c82e2f7b2ee6d6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>primalInfeasibilityTol</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a59ab9137f40559ff3362d60834d962e2</anchor>
+      <arglist>(c_float tol) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_float</type>
+      <name>primalInfeasibilityTol</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a9d9fbdfba98741058a92d7aa3cb801b8</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>dualInfeasibilityTol</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a83dfbc7d0fed21e2997836c328e86b86</anchor>
+      <arglist>(c_float tol) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_float</type>
+      <name>dualInfeasibilityTol</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>abe08f8ac9c83f73de3dc5042ce61b055</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>relaxationParam</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a8d8962bd2d17a6b1620bed61e1d52c21</anchor>
+      <arglist>(c_float alpha) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_float</type>
+      <name>relaxationParam</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a31f5e3669d7df4b6bf07c8fd1bf4e8db</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>linearSystemSolver</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>ab9ebedfa6e6f962a307fb4535b40b1b9</anchor>
+      <arglist>(linsys_solver_type solver) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>linsys_solver_type</type>
+      <name>linearSystemSolver</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a1376d57da5dc4d77ea663b677b9f5e63</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>scaleTermination</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a77044eb26f9145d8aeda06f00c955111</anchor>
+      <arglist>(bool doScaleTermination) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>scaleTermination</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>aa914acf70cb5562a51077f6871742332</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>checkTermination</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>ac083132adbc701fb1b9c7df1bd19fb3e</anchor>
+      <arglist>(c_int checkValue) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_int</type>
+      <name>checkTermination</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>abfb2edbde22c529664864261d7c56884</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>warmStart</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a381326793712841f6588bf0f1e42c95a</anchor>
+      <arglist>(bool ws) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>warmStart</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a1c3025f2e0403b962017fc798b305942</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>polish</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>ae015dbe9e6699deb8acc8b51bac29ad9</anchor>
+      <arglist>(bool doPolish) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>polish</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a5bcfc47d9c69f7e8c5ad5560a6230ebd</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>polishDelta</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a2fc7991ecb8d1e15707179184e6c9f53</anchor>
+      <arglist>(c_float delta) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_float</type>
+      <name>polishDelta</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a4572a4968fc25e8343b564c0ddae66eb</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>polishRefineIter</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>aaa598731d7e164f183cb84b650716111</anchor>
+      <arglist>(c_int iter) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_int</type>
+      <name>polishRefineIter</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a58aeffc4e0d05a76c2b17ed58c0725e8</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>verbose</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>ac187df1f029063164459882dc0b5f01d</anchor>
+      <arglist>(bool doPrint) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>verbose</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>ad7706478d58d75987960d29b32432c09</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>problem</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a138b1a922f8378ba6e85cb022d0b4e99</anchor>
+      <arglist>(int nrVar, int nrConstr)</arglist>
+    </member>
+    <member kind="function">
+      <type>const VectorDense &amp;</type>
+      <name>result</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>ad93d7345fb0626cfc4ee28ec7fe452d0</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>solve</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>acfff17a217a887e1d0244bf64fd0fd1e</anchor>
+      <arglist>(const TQ &amp;Q, const VectorConstRef &amp;c, const TA &amp;A, const VectorConstRef &amp;AL, const VectorConstRef &amp;AU, const VectorConstRef &amp;XL, const VectorConstRef &amp;XU)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>solve</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>ac453b7f97207f7e7d92a27e86ab92b4c</anchor>
+      <arglist>(const TQ &amp;Q, const VectorConstRef &amp;c, const TA &amp;A, const VectorConstRef &amp;AL, const VectorConstRef &amp;AU)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>solve</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a8a4974188f5cf4358ece3da763624365</anchor>
+      <arglist>(const TQ &amp;Q, const VectorConstRef &amp;c)</arglist>
+    </member>
+    <member kind="function">
+      <type>c_int</type>
+      <name>iter</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>aeb029b13c4e16a5e971e067d41f6d57a</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>inform</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a8905011aa1ffb363c6e5e0dcc2ad8929</anchor>
+      <arglist>(std::ostream &amp;os) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_int</type>
+      <name>status</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>ab34e5474ff48ce6a3869d28fab4c243b</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_float</type>
+      <name>costResult</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>adf4fbf771f84302f5f46f03aa19fb4c6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_float</type>
+      <name>primalResidualNorm</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a6c70edb79802540eb2985d3c3d6bcd48</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>c_float</type>
+      <name>dualResidualNorm</name>
+      <anchorfile>a00592.html</anchorfile>
+      <anchor>a4bb8c7eb5be88909180bff1a314873f9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>OSQPWorkspaceDeleter</name>
+    <filename>a00588.html</filename>
+    <member kind="function">
+      <type>void</type>
+      <name>operator()</name>
+      <anchorfile>a00588.html</anchorfile>
+      <anchor>aef5df4c991e08471db67482350a6d6a3</anchor>
+      <arglist>(OSQPWorkspace *ptr) const</arglist>
+    </member>
+  </compound>
+  <compound kind="namespace">
+    <name>Eigen</name>
+    <filename>a00036.html</filename>
+    <class kind="struct">Eigen::CSCMatrix</class>
+    <class kind="class">Eigen::OSQP</class>
+  </compound>
+  <compound kind="page">
+    <name>index</name>
+    <title>eigen-osqp</title>
+    <filename>index</filename>
+  </compound>
 </tagfile>
