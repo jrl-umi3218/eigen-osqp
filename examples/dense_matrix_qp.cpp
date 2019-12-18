@@ -1,3 +1,7 @@
+/*
+ * Copyright 2018-2019 CNRS-UM LIRMM, CNRS-AIST JRL
+ */
+
 #include <Eigen/Core>
 #include <eigen-osqp/CSCMatrix.h>
 #include <eigen-osqp/OSQP.h>

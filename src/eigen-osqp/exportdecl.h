@@ -1,3 +1,7 @@
+/*
+ * Copyright 2018-2019 CNRS-UM LIRMM, CNRS-AIST JRL
+ */
+
 #pragma once
 
 #if defined _WIN32 || defined __CYGWIN__

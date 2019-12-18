@@ -1,3 +1,7 @@
+#
+# Copyright 2018-2019 CNRS-UM LIRMM, CNRS-AIST JRL
+#
+
 set(SOURCES OSQP.cpp CSCMatrix.cpp)
 set(HEADERS eigen-osqp/OSQP.h eigen-osqp/CSCMatrix.h eigen-osqp/typedefs.h eigen-osqp/OSQP.hpp eigen-osqp/exportdecl.h)
 

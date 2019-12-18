@@ -1,3 +1,7 @@
+/*
+ * Copyright 2018-2019 CNRS-UM LIRMM, CNRS-AIST JRL
+ */
+
 #include "eigen-osqp/OSQP.h"
 
 void OSQPWorkspaceDeleter::operator()(OSQPWorkspace * ws) const

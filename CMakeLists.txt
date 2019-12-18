@@ -1,10 +1,14 @@
+#
+# Copyright 2018-2019 CNRS-UM LIRMM, CNRS-AIST JRL
+#
+
 cmake_minimum_required(VERSION 3.1.3)
 
 set(PROJECT_NAME eigen-osqp)
 set(PROJECT_DESCRIPTION "OSQP QP solver through Eigen3 library.")
 set(PROJECT_URL "https://gite.lirmm.fr/multi-contact/eigen-osqp")
 set(PROJECT_DEBUG_POSTFIX "_d")
-set(PROJECT_VERSION 0.4.0)
+set(PROJECT_VERSION 1.0.0)
 
 set(CXX_DISABLE_WERROR True)
 set(DOXYGEN_USE_MATHJAX "YES")

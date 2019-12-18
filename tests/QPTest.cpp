@@ -1,3 +1,7 @@
+/*
+ * Copyright 2018-2019 CNRS-UM LIRMM, CNRS-AIST JRL
+ */
+
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE Eigen_OSQP
 #include <boost/test/unit_test.hpp>
