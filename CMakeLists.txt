@@ -29,8 +29,13 @@ if(MSVC)
   set(CMAKE_MSVCIDE_RUN_PATH "\$(SolutionDir)/src/\$(Configuration)")
 endif()
 
-# add OSQP library
 add_project_dependency(Eigen3 REQUIRED)
+find_package(Eigen3 QUIET NO_CMAKE_PACKAGE_REGISTRY)
+if(Eigen3_FOUND)
+  add_project_dependency(Eigen3 REQUIRED NO_CMAKE_PACKAGE_REGISTRY)
+else()
+  add_project_dependency(Eigen3 MODULE REQUIRED)
+endif()
 # FIXME We need OSQP >= 0.6.0 but this is not exported by their CMake files
 add_project_dependency(osqp REQUIRED)
 

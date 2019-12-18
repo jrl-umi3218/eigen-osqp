@@ -8,7 +8,12 @@ set(HEADERS eigen-osqp/OSQP.h eigen-osqp/CSCMatrix.h eigen-osqp/typedefs.h eigen
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
 target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>)
 target_compile_definitions(${PROJECT_NAME} PRIVATE EIGEN_OSQP_EXPORTS)
-target_link_libraries(${PROJECT_NAME} PUBLIC osqp::osqp Eigen3::Eigen)
+target_link_libraries(${PROJECT_NAME} PUBLIC osqp::osqp)
+if(TARGET Eigen3::Eigen)
+  target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen)
+else()
+  target_include_directories(${PROJECT_NAME} SYSTEM INTERFACE "${EIGEN3_INCLUDE_DIR}")
+endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR} VERSION ${PROJECT_VERSION})
 
 set(INSTALL_PATH include/${PROJECT_NAME})
