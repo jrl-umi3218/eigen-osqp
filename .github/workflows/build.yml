@@ -63,4 +63,4 @@ jobs:
         slack-bot-user-oauth-access-token: ${{ secrets.SLACK_BOT_TOKEN }}
         slack-channel: '#ci'
         slack-text: >
-          [eigen-qld] Build *${{ matrix.os }}/${{ matrix.build-type }}* failed on ${{ github.ref }}
+          [eigen-osqp] Build *${{ matrix.os }}/${{ matrix.build-type }}* failed on ${{ github.ref }}

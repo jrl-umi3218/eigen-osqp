@@ -19,6 +19,8 @@ include(cmake/msvc-specific.cmake)
 
 option(COMPILE_EXAMPLES "Compile examples." ON)
 
+set(CMAKE_CXX_STANDARD 11)
+
 project(${PROJECT_NAME} LANGUAGES CXX VERSION ${PROJECT_VERSION})
 
 # For MSVC, set local environment variable to enable finding the built dll
