@@ -12,7 +12,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC osqp::osqp)
 if(TARGET Eigen3::Eigen)
   target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen)
 else()
-  target_include_directories(${PROJECT_NAME} SYSTEM INTERFACE "${EIGEN3_INCLUDE_DIR}")
+  target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC "${EIGEN3_INCLUDE_DIR}")
 endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR} VERSION ${PROJECT_VERSION})
 
