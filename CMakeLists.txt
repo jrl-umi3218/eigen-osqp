@@ -9,6 +9,7 @@ set(PROJECT_DESCRIPTION "OSQP QP solver through Eigen3 library.")
 set(PROJECT_URL "https://gite.lirmm.fr/multi-contact/eigen-osqp")
 set(PROJECT_DEBUG_POSTFIX "_d")
 set(PROJECT_VERSION 1.0.0)
+set(PROJECT_USE_CMAKE_EXPORT TRUE)
 
 set(CXX_DISABLE_WERROR True)
 set(DOXYGEN_USE_MATHJAX "YES")

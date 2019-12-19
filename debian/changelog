@@ -1,0 +1,5 @@
+eigen-osqp (1.0.0-1ubuntu1) unstable; urgency=medium
+
+  * Initial release
+
+ -- Pierre Gergondet <pierre.gergondet+ppa@gmail.com>  Thu, 19 Dec 2019 10:37:26 +0800

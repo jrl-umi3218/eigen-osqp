@@ -1,0 +1,4 @@
+usr/include/*
+usr/lib/*/libeigen-osqp.so
+usr/lib/*/pkgconfig/*
+usr/lib/cmake/*
