@@ -77,7 +77,8 @@ $(document).ready(function(){initNavTree('index.html','');});
 <p>eigen-osqp allows to use the OSQP solver with the Eigen3 library.</p>
 <p>It supports dense and sparse matrix.</p>
 <h2>Installation</h2>
-<h3>From source</h3>
+<h3>Ubuntu LTS (16.04, 18.04, 20.04)</h3>
+<div class="fragment"><div class="line"># Make sure you have required tools</div><div class="line">sudo apt install apt-transport-https lsb-release ca-certificates gnupg</div><div class="line"># Add our key</div><div class="line">sudo apt-key adv --keyserver &#39;hkp://keyserver.ubuntu.com:80&#39; --recv-key 892EA6EE273707C6495A6FB6220D644C64666806</div><div class="line"># Add our repository (stable versions)</div><div class="line">sudo sh -c &#39;echo &quot;deb https://dl.bintray.com/gergondet/multi-contact-release $(lsb_release -sc) main&quot; | sudo tee /etc/apt/sources.list.d/multi-contact.list&#39;</div><div class="line"># Use this to setup the HEAD version</div><div class="line"># sudo sh -c &#39;echo &quot;deb https://dl.bintray.com/gergondet/multi-contact-head $(lsb_release -sc) main&quot; | sudo tee /etc/apt/sources.list.d/multi-contact.list&#39;</div><div class="line"># Update packages list</div><div class="line">sudo apt update</div><div class="line"># Install packages</div><div class="line">sudo apt install libeigen-osqp-dev</div></div><!-- fragment --><h3>From source</h3>
 <h4>Dependencies</h4>
 <p>To compile you need the following tools:</p>
 <ul>
@@ -95,7 +96,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Dec 19 2019 06:13:35 for eigen-osqp by
+    <li class="footer">Generated on Thu Dec 19 2019 06:40:55 for eigen-osqp by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>
